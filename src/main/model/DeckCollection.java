@@ -3,13 +3,14 @@ package model;
 import java.util.ArrayList;
 
 public class DeckCollection {
+
     ArrayList<Deck> deckList;
 
     public DeckCollection() {
-        deckList = new ArrayList<Deck>();
+        deckList = new ArrayList<>();
     }
 
-    public ArrayList<Deck> getDeckList() {
-        return this.deckList;
+    public boolean containsDeck() {
+        return false; // stub
     }
 }
