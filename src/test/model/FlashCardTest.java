@@ -25,7 +25,7 @@ public class FlashCardTest {
     @Test
     public void testGetBack() {
         String testBack = testCard.getBack();
-        assertEquals(TEST_FRONT, testBack);
+        assertEquals(TEST_BACK, testBack);
     }
 
 
