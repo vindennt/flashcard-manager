@@ -18,12 +18,14 @@ public class FlashCardTest {
 
     @Test
     public void testGetFront() {
-        assertEquals(TEST_FRONT, testCard.getFront());
+        String testFront = testCard.getFront();
+        assertEquals(TEST_FRONT, testFront);
     }
 
     @Test
     public void testGetBack() {
-        assertEquals(TEST_BACK, testCard.getBack());
+        String testBack = testCard.getBack();
+        assertEquals(TEST_FRONT, testBack);
     }
 
 
