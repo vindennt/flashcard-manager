@@ -1,8 +1,8 @@
 package model;
 
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,7 +17,7 @@ public class DeckTest {
     String TEST_BACK = "Back";
 
 
-    @Before
+    @BeforeEach
     public void setup() {
         testDeck = new Deck(TEST_NAME, TEST_SUBJECT);
         testCard = new FlashCard(TEST_FRONT, TEST_BACK);
