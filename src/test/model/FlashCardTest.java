@@ -26,11 +26,5 @@ public class FlashCardTest {
         assertEquals(TEST_BACK, testCard.getBack());
     }
 
-    @Test
-    public void testNewGetDaysBeforeReview() {
-        assertEquals(testCard.getInitialDays(), testCard.getDaysBeforeReview());
-    }
-
-
 
 }

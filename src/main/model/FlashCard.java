@@ -2,8 +2,6 @@ package model;
 
 public class FlashCard {
 
-    private static int INITIAL_DAYS = 0;
-
     private String front;
     private String back;
     private int daysBeforeReview;
@@ -11,7 +9,6 @@ public class FlashCard {
     public FlashCard(String front, String back) {
         this.front = front;
         this.back = back;
-        this.daysBeforeReview = INITIAL_DAYS;
     }
 
     public String getFront() {
@@ -20,10 +17,6 @@ public class FlashCard {
 
     public String getBack() {
         return this.back;
-    }
-
-    public int getDaysBeforeReview() {
-        return this.daysBeforeReview;
     }
 
     // TESTS
@@ -36,7 +29,4 @@ public class FlashCard {
         this.front = newBack;
     }
 
-    public int getInitialDays() {
-        return INITIAL_DAYS;
-    }
 }

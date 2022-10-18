@@ -21,10 +21,6 @@ public class Deck {
         return this.subject;
     }
 
-    public boolean contains(String keyword) {
-        return false; // stub
-    }
-
     // TESTS
     public void addFlashCard(String front, String back) {
         FlashCard newFlashCard = new FlashCard(front, back);
