@@ -21,6 +21,7 @@ public class Deck {
         return this.subject;
     }
 
+    // EFFECTS: returns TRUE if deck contains flashcard, else false
     public boolean contains(FlashCard flashCard) {
         return cardsInDeck.contains(flashCard);
     }
@@ -29,14 +30,21 @@ public class Deck {
         return cardsInDeck.size();
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds flashcard to deck
+    // Note: make empty character exception
     public void addFlashCard(FlashCard newCard) {
         cardsInDeck.add(newCard);
     }
 
+    // MODIFIES: this
+    // EFFECTS: removes flashcard from deck
     public void removeFlashCard(FlashCard toRemove) {
         cardsInDeck.remove(toRemove);
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets flashcard at index in the deck to input card
     public void setFlashCard(int index, FlashCard newCard) {
         cardsInDeck.set(index, newCard);
     }
