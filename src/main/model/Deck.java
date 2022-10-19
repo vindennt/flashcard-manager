@@ -53,10 +53,16 @@ public class Deck {
         cardsInDeck.remove(cardToRemove);
     }
 
+    // REQUIRES: index >= 0
     // MODIFIES: this
     // EFFECTS: sets flashcard at index in the deck to input card
     public void setFlashCard(int index, FlashCard newCard) {
-        cardsInDeck.set(index, newCard);
+        if ((index < 0) || (index >= cardsInDeck.size())) {
+            // TODO: exception?
+            System.out.println("Invalid index");
+        } else {
+            cardsInDeck.set(index, newCard);
+        }
     }
 
 }

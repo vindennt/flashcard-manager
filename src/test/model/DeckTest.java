@@ -111,6 +111,36 @@ public class DeckTest {
     }
 
     @Test
+    public void testSetCardUnderZero() {
+        testDeck.addFlashCard(testCard);
+        assertTrue(testDeck.contains(testCard));
+        FlashCard differentCard = new FlashCard("second", "card");
+        testDeck.setFlashCard(-1, differentCard);
+        assertTrue(testDeck.contains(testCard));
+        assertFalse(testDeck.contains(differentCard));
+    }
+
+    @Test
+    public void testSetCardSameDeckSize() {
+        testDeck.addFlashCard(testCard);
+        assertTrue(testDeck.contains(testCard));
+        FlashCard differentCard = new FlashCard("second", "card");
+        testDeck.setFlashCard(2, differentCard);
+        assertTrue(testDeck.contains(testCard));
+        assertFalse(testDeck.contains(differentCard));
+    }
+
+    @Test
+    public void testSetCardOverDeckSize() {
+        testDeck.addFlashCard(testCard);
+        assertTrue(testDeck.contains(testCard));
+        FlashCard differentCard = new FlashCard("second", "card");
+        testDeck.setFlashCard(3, differentCard);
+        assertTrue(testDeck.contains(testCard));
+        assertFalse(testDeck.contains(differentCard));
+    }
+
+    @Test
     public void testGetOnce() {
         testDeck.addFlashCard(testCard);
         assertEquals(testCard, testDeck.get(0));
