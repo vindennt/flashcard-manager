@@ -23,7 +23,7 @@ public class Deck {
         return this.course;
     }
 
-    // EFFECTS: returns TRUE if deck contains flashcard, else false
+    // EFFECTS: returns TRUE if deck contains specified flashcard, else false
     public boolean contains(FlashCard flashCard) {
         return cardsInDeck.contains(flashCard);
     }
@@ -33,7 +33,7 @@ public class Deck {
         return cardsInDeck.size();
     }
 
-    // requires: index >= 0 and < size(cardsInDeck)
+    // REQUIRES: index >= 0 and index < size(cardsInDeck)
     // EFFECTS: returns flashcard at index i from cardsInDeck
     public FlashCard get(int index) {
         return this.cardsInDeck.get(index);
