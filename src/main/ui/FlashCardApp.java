@@ -4,6 +4,7 @@ import model.Deck;
 import model.FlashCard;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
 // Flashcard reviewer application
@@ -109,7 +110,7 @@ public class FlashCardApp {
 
         System.out.println("Card front?");
         front = input.next();
-        System.out.println("Deck back?");
+        System.out.println("Card back?");
         back = input.next();
         newCard = new FlashCard(front, back);
         return newCard;
@@ -141,9 +142,8 @@ public class FlashCardApp {
         }
         System.out.println("Choose flashcard ID:");
         int command = input.nextInt();
-        while (!(command >= 0) && !(command < chosenDeck.size())) {
+        if ((command < 0) || (command >= chosenDeck.size())) {
             System.out.println("Invalid ID");
-            command = input.nextInt();
         }
         lastChosenCardIndex = command;
         return chosenDeck.get(command);
@@ -174,7 +174,6 @@ public class FlashCardApp {
     // REQUIRES: deckToReview is not empty
     // EFFECTS: prints out fronts of flashcards from deckToReview for user to type matching back
     private void doReviewDeck(Deck deckToReview) {
-        System.out.println("Rules: Case sensitive, one attempt per card");
         String command = null;
         int questionNumber = 0;
         ArrayList<FlashCard> cardsToDisplay = new ArrayList<>();
@@ -185,25 +184,31 @@ public class FlashCardApp {
         }
         for (FlashCard c : cardsToDisplay) {
             questionNumber += 1;
-            System.out.println("Question " + questionNumber + ": " + c.getFront());
+            System.out.println("\tQuestion " + questionNumber + ": " + c.getFront());
             System.out.println("Type matching back:");
             command = input.next();
-            if (command == c.getBack()) {
+            String answerText = c.getBack();
+            if (command.equals(answerText)) {
                 System.out.println("Correct!");
             } else {
                 System.out.println("Incorrect");
                 cardsIncorrect.add(c);
             }
         }
-        System.out.println("Got " + cardsIncorrect.size() + "incorrect. Displaying flashcards gotten incorrect:");
+        System.out.println("Review session ended. Got " + cardsIncorrect.size() + " incorrect.");
         displayFlashCardsFromList(cardsIncorrect);
     }
 
     private void displayFlashCardsFromList(ArrayList<FlashCard> cardsIncorrect) {
-        for (FlashCard c : cardsIncorrect) {
-            String name = c.getFront();
-            String course = c.getBack();
-            System.out.println("\tICard: " + name + ", Course: " + course);
+        if (cardsIncorrect.size() == 0) {
+            // ignore method
+        } else {
+            System.out.println("Displaying flashcards gotten incorrect:");
+            for (FlashCard c : cardsIncorrect) {
+                String front = c.getFront();
+                String back = c.getBack();
+                System.out.println("\tFront: " + front + ", Back: " + back);
+            }
         }
     }
 
@@ -245,9 +250,8 @@ public class FlashCardApp {
 
         System.out.println("Choose deck ID:");
         int command = input.nextInt();
-        while (!(command >= 0) && !(command < deckList.size())) {
+        if ((command < 0) || (command >= deckList.size())) {
             System.out.println("Invalid ID");
-            command = input.nextInt();
         }
         return deckList.get(command);
     }
