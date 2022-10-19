@@ -1,12 +1,12 @@
+////
+//// Source code recreated from a .class file by IntelliJ IDEA
+//// (powered by FernFlower decompiler)
+////
 //
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
+//package persistence;
 //
-
-package persistence;
-
-import org.json.JSONObject;
-
-public interface Writable {
-    JSONObject toJson();
-}
+//import org.json.JSONObject;
+//
+//public interface Writable {
+//    JSONObject toJson();
+//}

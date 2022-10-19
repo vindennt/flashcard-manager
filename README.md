@@ -15,7 +15,7 @@ The user stories that I wish to fulfill are:
 - As a user, I want to be able to add a flashcard to a deck in a collection of decks
 - As a user, I want to be able to edit a specific flashcard in a deck
 - As a user, I want to be able to be tested on the flashcards from a deck of my choice
-- As a user, I want to be able to see which flashcards I got incorrect or spent the most time on during testing
+- As a user, I want to be able to see which flashcards I got incorrect
 
 ### P2
 
