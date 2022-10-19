@@ -1,10 +1,13 @@
 package model;
 
-// Represents a FlashCard with a frontside and backside
+// Represents a FlashCard with a front side and back side
 public class FlashCard {
     private String front;
     private String back;
 
+    // REQUIRES: front and back are not empty
+    // MODIFIES: this
+    // EFFECTS: creates FlashCard with inputted front and back
     public FlashCard(String front, String back) {
         this.front = front;
         this.back = back;

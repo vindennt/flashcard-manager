@@ -8,6 +8,9 @@ public class Deck {
     private String course;
     private ArrayList<FlashCard> cardsInDeck;
 
+    // REQUIRES: name and course are not empty
+    // MODIFIES: this
+    // EFFECTS: constructs a deck with name and course, and empty card list
     public Deck(String name, String course) {
         this.name = name;
         this.course = course;
