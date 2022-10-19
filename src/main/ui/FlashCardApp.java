@@ -54,7 +54,7 @@ public class FlashCardApp {
 
     // !!!
     // EFFECTS: displays edit deck menu options
-    private void displayEditMenu() {
+    private void displayDeckMenu() {
         System.out.println("\nDECK EDITOR: Select command:");
         System.out.println("\tr -> review deck");
         System.out.println("\ta -> add flashcard");
@@ -69,13 +69,17 @@ public class FlashCardApp {
         if (command.equals("n")) {
             doAddNewDeck();
         } else if (command.equals("c")) {
-            doChooseDeck();
+            if (deckList.size() == 0) {
+                System.out.println("No decks available");
+            } else {
+                deckMenu();
+            }
         } else {
             System.out.println("Invalid command");
         }
     }
 
-    // TODO
+
     // MODIFIES: this
     // EFFECTS: processes user input command on edit screen
     private void processEditCommand(String command) {
@@ -98,7 +102,7 @@ public class FlashCardApp {
 
     // TODO
     private void doEditCard() {
-        
+
     }
 
     // TODO
@@ -110,14 +114,14 @@ public class FlashCardApp {
     private void doReviewDeck() {
     }
 
-    // TODO
-    private void doChooseDeck() {
+    private void deckMenu() {
         boolean proceed = true;
         String command = null;
-        init();
+        Deck chosenDeck = deckSelector();
+        System.out.println("Chose deck named " + chosenDeck.getName() + " for course " + chosenDeck.getCourse());
 
         while (proceed) {
-            displayDeckList();
+            displayDeckMenu();
             command = input.next();
             command = command.toLowerCase();
 
@@ -130,15 +134,41 @@ public class FlashCardApp {
         System.out.println("Back to home screen...");
     }
 
-    // TODO
-    private void displayDeckList() {
+    // REQUIRES: deckList is not empty
+    // EFFECTS: display all decks with an index and returns chosen deck
+    private Deck deckSelector() {
+        int index;
+        String name;
+        String course;
+        System.out.println("Displaying deck list...");
+
+        for (int i = 0; i < deckList.size(); i++) {
+            Deck currentDeck = deckList.get(i);
+            index = i;
+            name = currentDeck.getName();
+            course = currentDeck.getCourse();
+            System.out.println("\tID: " + index + ", Name: " + name + ", Course: " + course);
+        }
+        System.out.println("Choose deck ID:");
+        int command = input.nextInt();
+        return deckList.get(command);
     }
 
 
-    // TODO
+    // MODIFIES: this
+    // EFFECTS: adds an empty deck with name and course, regardless of duplicates.
     private void doAddNewDeck() {
-        
+        String name;
+        String course;
+        Deck deckToAdd;
+
+        System.out.println("Deck name?");
+        name = input.next();
+        System.out.println("Deck course?");
+        course = input.next();
+        deckToAdd = new Deck(name, course);
+        deckList.add(deckToAdd);
+        System.out.println("Added deck " + name + " for course " + course + " to deck list.");
+        System.out.println("Back to home screen...");
     }
-
-
 }
