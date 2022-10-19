@@ -4,21 +4,23 @@ import java.util.ArrayList;
 
 public class Deck {
     private String name;
-    private String subject;
+    private String course;
     private ArrayList<FlashCard> cardsInDeck;
 
-    public Deck(String name, String subject) {
+    public Deck(String name, String course) {
         this.name = name;
-        this.subject = subject;
+        this.course = course;
         this.cardsInDeck = new ArrayList<>();
     }
 
+    // EFFECTS: returns deck name
     public String getName() {
         return this.name;
     }
 
-    public String getSubject() {
-        return this.subject;
+    // EFFECTS: returns deck subject
+    public String getCourse() {
+        return this.course;
     }
 
     // EFFECTS: returns TRUE if deck contains flashcard, else false
@@ -26,6 +28,7 @@ public class Deck {
         return cardsInDeck.contains(flashCard);
     }
 
+    // EFFECTS: returns number of cards in deck
     public int size() {
         return cardsInDeck.size();
     }

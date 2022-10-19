@@ -10,7 +10,7 @@ public class DeckTest {
 
     Deck testDeck;
     String TEST_NAME = "test";
-    String TEST_SUBJECT = "Science";
+    String TEST_COURSE = "CPSC210";
 
     FlashCard testCard;
     String TEST_FRONT = "Front";
@@ -19,7 +19,7 @@ public class DeckTest {
 
     @BeforeEach
     public void setup() {
-        testDeck = new Deck(TEST_NAME, TEST_SUBJECT);
+        testDeck = new Deck(TEST_NAME, TEST_COURSE);
         testCard = new FlashCard(TEST_FRONT, TEST_BACK);
     }
 
@@ -30,7 +30,7 @@ public class DeckTest {
 
     @Test
     public void testGetSubject() {
-        assertEquals(TEST_SUBJECT, testDeck.getSubject());
+        assertEquals(TEST_COURSE, testDeck.getCourse());
     }
 
     @Test
