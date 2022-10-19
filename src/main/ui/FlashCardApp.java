@@ -242,8 +242,13 @@ public class FlashCardApp {
             course = currentDeck.getCourse();
             System.out.println("\tID: " + index + ", Name: " + name + ", Course: " + course);
         }
+
         System.out.println("Choose deck ID:");
         int command = input.nextInt();
+        while (!(command >= 0) && !(command < deckList.size())) {
+            System.out.println("Invalid ID");
+            command = input.nextInt();
+        }
         return deckList.get(command);
     }
 
