@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 
+// Represents a deck with a name, course, and a list of FlashCards
 public class Deck {
     private String name;
     private String course;

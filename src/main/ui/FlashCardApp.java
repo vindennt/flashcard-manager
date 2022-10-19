@@ -8,9 +8,9 @@ import java.util.Scanner;
 
 // Flashcard storage and review application
 public class FlashCardApp {
-    private Scanner input;
-    private ArrayList<Deck> deckList;
-    private int lastChosenCardIndex;
+    private Scanner input;            // monitors input
+    private ArrayList<Deck> deckList; // list of all decks
+    private int lastChosenCardIndex;  // tracks last chosen flashcard index
 
     // EFFECTS: runs flashcard application
     public FlashCardApp() {
@@ -39,7 +39,7 @@ public class FlashCardApp {
     }
 
     // MODIFIES: this
-    // EFFECTS: initializes decklist
+    // EFFECTS: initializes decklist, input tracker, and last chosen card
     private void init() {
         deckList = new ArrayList<>();
         input = new Scanner(System.in);
@@ -100,15 +100,15 @@ public class FlashCardApp {
         }
     }
 
-    // EFFECTS: returns a user created flashcard
+    // EFFECTS: prompts user to create a flashcard and returns it
     private FlashCard doUserCreateCard() {
         String front;
         String back;
         FlashCard newCard;
 
-        System.out.println("Card front?");
+        System.out.print("Card front: ");
         front = input.next();
-        System.out.println("Card back?");
+        System.out.print("Card back: ");
         back = input.next();
         newCard = new FlashCard(front, back);
         return newCard;
@@ -124,7 +124,7 @@ public class FlashCardApp {
         System.out.println("Added flashcard with front: " + front + ", back: " + back + " to deck.");
     }
 
-    // EFFECTS: returns flashcard at index chosen by user
+    // EFFECTS: displays all flashcards in deck and returns the flashcard at index chosen by user
     private FlashCard selectFlashCard(Deck chosenDeck) {
         int index;
         String front;
@@ -138,7 +138,7 @@ public class FlashCardApp {
             back = currentFlashCard.getBack();
             System.out.println("\tID: " + index + ", Front: " + front + ", Back: " + back);
         }
-        System.out.println("Choose flashcard ID:");
+        System.out.print("Choose flashcard ID: ");
         int command = input.nextInt();
         // TODO throw exception or request a new input if invalid
         if ((command < 0) || (command >= chosenDeck.size())) {
@@ -150,7 +150,7 @@ public class FlashCardApp {
 
     // REQUIRES: chosenDeck contains at least 1 flashcard
     // MODIFIES: this
-    // EFFECTS: changes selected card to new user input parameters
+    // EFFECTS: replaces a user-chosen flashcard with a user-created flashcard
     private void doEditCard(Deck chosenDeck) {
         selectFlashCard(chosenDeck);
         int cardIndexToReplace = lastChosenCardIndex;
@@ -161,7 +161,7 @@ public class FlashCardApp {
 
     // REQUIRES: chosenDeck contains at least 1 flashcard
     // MODIFIES: this
-    // EFFECTS; deletes user selected flashcard from the chosenDeck
+    // EFFECTS; deletes user-chosen flashcard from the chosenDeck
     private void doDeleteCard(Deck chosenDeck) {
         selectFlashCard(chosenDeck);
         int cardIndexToDelete = lastChosenCardIndex;
@@ -184,7 +184,7 @@ public class FlashCardApp {
         for (FlashCard c : cardsToDisplay) {
             questionNumber += 1;
             System.out.println("\tQuestion " + questionNumber + ": " + c.getFront());
-            System.out.println("Type matching back:");
+            System.out.print("Matching answer: ");
             command = input.next();
             String answerText = c.getBack();
             if (command.equals(answerText)) {
@@ -198,11 +198,11 @@ public class FlashCardApp {
         displayFlashCardsFromList(cardsIncorrect);
     }
 
+
     // REQUIRES: numberCardsReview != 0
-    // EFFECTS: displays correctness percentage for a flashcard review session
+    // EFFECTS: displays correctness score and end message for review session
     private void displayReviewEndMessage(double numberCardsReviewed, double numberCardsIncorrect) {
         double cardsCorrect = numberCardsReviewed - numberCardsIncorrect;
-        System.out.println(cardsCorrect);
         double percentScore = cardsCorrect / numberCardsReviewed;
         double maxPercent = 100.00;
         percentScore *= maxPercent;
@@ -213,7 +213,7 @@ public class FlashCardApp {
     }
 
     // REQUIRES: cardsToDisplay.size() != 0
-    // EFFECTS: displays all flashcards from cardsToDisplay
+    // EFFECTS: displays fronts and back of all flashcards from cardsToDisplay
     private void displayFlashCardsFromList(ArrayList<FlashCard> cardsToDisplay) {
         if (cardsToDisplay.size() == 0) {
             // ignore method if no cards to display
@@ -227,7 +227,7 @@ public class FlashCardApp {
         }
     }
 
-    // EFFECTS: displays commands to enact upon a chosen deck
+    // EFFECTS: displays and processes commands to enact upon a chosen deck
     private void deckMenu() {
         boolean proceed = true;
         String command = null;
@@ -249,7 +249,7 @@ public class FlashCardApp {
     }
 
     // REQUIRES: deckList is not empty
-    // EFFECTS: display all decks with an index and returns chosen deck
+    // EFFECTS: display all decks with an index and returns user-chosen deck
     private Deck selectDeck() {
         int index;
         String name;
@@ -264,7 +264,7 @@ public class FlashCardApp {
             System.out.println("\tID: " + index + ", Name: " + name + ", Course: " + course);
         }
 
-        System.out.println("Choose deck ID:");
+        System.out.print("Choose deck ID: ");
         int command = input.nextInt();
         // TODO throw exception or request a new input if invalid
         if ((command < 0) || (command >= deckList.size())) {
@@ -275,15 +275,15 @@ public class FlashCardApp {
 
 
     // MODIFIES: this
-    // EFFECTS: adds an empty deck with name and course, regardless of duplicates.
+    // EFFECTS: prompts user to choose a new deck's name and course and adds it to decklist
     private void doAddNewDeck() {
         String name;
         String course;
         Deck deckToAdd;
 
-        System.out.println("Deck name?");
+        System.out.print("Deck name: ");
         name = input.next();
-        System.out.println("Deck course?");
+        System.out.print("Deck course: ");
         course = input.next();
         deckToAdd = new Deck(name, course);
         deckList.add(deckToAdd);

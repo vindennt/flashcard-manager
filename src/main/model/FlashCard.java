@@ -1,7 +1,7 @@
 package model;
 
+// Represents a FlashCard with a frontside and backside
 public class FlashCard {
-
     private String front;
     private String back;
 
