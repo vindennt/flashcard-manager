@@ -1,6 +1,7 @@
 package ui;
 
 import model.Deck;
+import model.FlashCard;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -9,6 +10,7 @@ import java.util.Scanner;
 public class FlashCardApp {
     private Scanner input;
     private ArrayList<Deck> deckList;
+    private int lastChosenCardIndex;
 
     // EFFECTS: runs flashcard application
     public FlashCardApp() {
@@ -42,6 +44,7 @@ public class FlashCardApp {
         deckList = new ArrayList<>();
         input = new Scanner(System.in);
         input.useDelimiter("\n");
+        lastChosenCardIndex = 0;
     }
 
     // EFFECTS: displays home screen menu options
@@ -55,7 +58,7 @@ public class FlashCardApp {
     // !!!
     // EFFECTS: displays edit deck menu options
     private void displayDeckMenu() {
-        System.out.println("\nDECK EDITOR: Select command:");
+        System.out.println("\nDECK: Select command:");
         System.out.println("\tr -> review deck");
         System.out.println("\ta -> add flashcard");
         System.out.println("\te -> edit flashcard");
@@ -80,44 +83,134 @@ public class FlashCardApp {
     }
 
 
-    // MODIFIES: this
+    // MODIFIES: this  r a e d
     // EFFECTS: processes user input command on edit screen
-    private void processEditCommand(String command) {
-        if (command.equals("r")) {
-            doReviewDeck();
-        } else if (command.equals("a")) {
-            doAddNewCard();
+    private void processDeckMenuCommand(String command, Deck chosenDeck) {
+        if (command.equals("a")) {
+            doAddNewCard(chosenDeck);
+        } else if (chosenDeck.size() == 0) {
+            System.out.println("Deck is empty");
+        } else if (command.equals("r")) {
+            doReviewDeck(chosenDeck);
         } else if (command.equals("e")) {
-            doEditCard();
+            doEditCard(chosenDeck);
         } else if (command.equals("d")) {
-            doDeleteCard();
+            doDeleteCard(chosenDeck);
         } else {
             System.out.println("Invalid command");
         }
     }
 
-    // TODO
-    private void doDeleteCard() {
+    // EFFECTS: returns a flashcard that the user creates
+    private FlashCard doUserCreateCard() {
+        String front;
+        String back;
+        FlashCard newCard;
+
+        System.out.println("Card front?");
+        front = input.next();
+        System.out.println("Deck back?");
+        back = input.next();
+        newCard = new FlashCard(front, back);
+        return newCard;
     }
 
-    // TODO
-    private void doEditCard() {
-
+    // MODIFIES: this
+    // EFFECTS: adds flashcard with an inputted front and back to the chosen deck
+    private void doAddNewCard(Deck chosenDeck) {
+        FlashCard cardToAdd = doUserCreateCard();
+        chosenDeck.addFlashCard(cardToAdd);
+        String front = cardToAdd.getFront();
+        String back = cardToAdd.getBack();
+        System.out.println("Added flashcard with front: " + front + ", back: " + back + " to deck.");
     }
 
-    // TODO
-    private void doAddNewCard() {
+    // EFFECTS: returns flashcard at index chosen by user
+    private FlashCard selectFlashCard(Deck chosenDeck) {
+        int index;
+        String front;
+        String back;
+        System.out.println("Displaying flashcards in deck...");
+
+        for (int i = 0; i < chosenDeck.size(); i++) {
+            FlashCard currentFlashCard = chosenDeck.get(i);
+            index = i;
+            front = currentFlashCard.getFront();
+            back = currentFlashCard.getBack();
+            System.out.println("\tID: " + index + ", Front: " + front + ", Back: " + back);
+        }
+        System.out.println("Choose flashcard ID:");
+        int command = input.nextInt();
+        while (!(command >= 0) && !(command < chosenDeck.size())) {
+            System.out.println("Invalid ID");
+            command = input.nextInt();
+        }
+        lastChosenCardIndex = command;
+        return chosenDeck.get(command);
     }
 
+    // REQUIRES: chosenDeck contains at least 1 flashcard
+    // MODIFIES: this
+    // EFFECTS: changes selected card to new user input parameters
+    private void doEditCard(Deck chosenDeck) {
+        selectFlashCard(chosenDeck);
+        int cardIndexToReplace = lastChosenCardIndex;
+        FlashCard editedCard = doUserCreateCard();
+        chosenDeck.setFlashCard(cardIndexToReplace, editedCard);
+        System.out.println("Edit complete.");
+    }
 
-    // TODO
-    private void doReviewDeck() {
+    // REQUIRES: chosenDeck contains at least 1 flashcard
+    // MODIFIES: this
+    // EFFECTS; deletes user selected flashcard from the chosenDeck
+    private void doDeleteCard(Deck chosenDeck) {
+        selectFlashCard(chosenDeck);
+        int cardIndexToDelete = lastChosenCardIndex;
+        FlashCard cardToDelete = chosenDeck.get(cardIndexToDelete);
+        chosenDeck.removeFlashCard(cardToDelete);
+        System.out.println("Card deleted.");
+    }
+
+    // REQUIRES: deckToReview is not empty
+    // EFFECTS: prints out fronts of flashcards from deckToReview for user to type matching back
+    private void doReviewDeck(Deck deckToReview) {
+        System.out.println("Rules: Case sensitive, one attempt per card");
+        String command = null;
+        int questionNumber = 0;
+        ArrayList<FlashCard> cardsToDisplay = new ArrayList<>();
+        ArrayList<FlashCard> cardsIncorrect = new ArrayList<>();
+        for (int i = 0; i < deckToReview.size(); i++) {
+            FlashCard currentFlashCard = deckToReview.get(i);
+            cardsToDisplay.add(currentFlashCard);
+        }
+        for (FlashCard c : cardsToDisplay) {
+            questionNumber += 1;
+            System.out.println("Question " + questionNumber + ": " + c.getFront());
+            System.out.println("Type matching back:");
+            command = input.next();
+            if (command == c.getBack()) {
+                System.out.println("Correct!");
+            } else {
+                System.out.println("Incorrect");
+                cardsIncorrect.add(c);
+            }
+        }
+        System.out.println("Got " + cardsIncorrect.size() + "incorrect. Displaying flashcards gotten incorrect:");
+        displayFlashCardsFromList(cardsIncorrect);
+    }
+
+    private void displayFlashCardsFromList(ArrayList<FlashCard> cardsIncorrect) {
+        for (FlashCard c : cardsIncorrect) {
+            String name = c.getFront();
+            String course = c.getBack();
+            System.out.println("\tICard: " + name + ", Course: " + course);
+        }
     }
 
     private void deckMenu() {
         boolean proceed = true;
         String command = null;
-        Deck chosenDeck = deckSelector();
+        Deck chosenDeck = selectDeck();
         System.out.println("Chose deck named " + chosenDeck.getName() + " for course " + chosenDeck.getCourse());
 
         while (proceed) {
@@ -128,7 +221,7 @@ public class FlashCardApp {
             if (command.equals("b")) {
                 proceed = false;
             } else {
-                processEditCommand(command);
+                processDeckMenuCommand(command, chosenDeck);
             }
         }
         System.out.println("Back to home screen...");
@@ -136,7 +229,7 @@ public class FlashCardApp {
 
     // REQUIRES: deckList is not empty
     // EFFECTS: display all decks with an index and returns chosen deck
-    private Deck deckSelector() {
+    private Deck selectDeck() {
         int index;
         String name;
         String course;

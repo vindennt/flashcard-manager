@@ -33,6 +33,12 @@ public class Deck {
         return cardsInDeck.size();
     }
 
+    // requires: index >= 0 and < size(cardsInDeck)
+    // EFFECTS: returns flashcard at index i from cardsInDeck
+    public FlashCard get(int index) {
+        return this.cardsInDeck.get(index);
+    }
+
     // MODIFIES: this
     // EFFECTS: adds flashcard to deck
     // Note: make empty character exception
@@ -42,8 +48,8 @@ public class Deck {
 
     // MODIFIES: this
     // EFFECTS: removes flashcard from deck
-    public void removeFlashCard(FlashCard toRemove) {
-        cardsInDeck.remove(toRemove);
+    public void removeFlashCard(FlashCard cardToRemove) {
+        cardsInDeck.remove(cardToRemove);
     }
 
     // MODIFIES: this

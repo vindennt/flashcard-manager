@@ -110,4 +110,18 @@ public class DeckTest {
         assertTrue(testDeck.contains(testCard));
     }
 
+    @Test
+    public void testGetOnce() {
+        testDeck.addFlashCard(testCard);
+        assertEquals(testCard, testDeck.get(0));
+    }
+
+    @Test
+    public void testGetTwice() {
+        testDeck.addFlashCard(testCard);
+        assertEquals(testCard, testDeck.get(0));
+        FlashCard testcard_2 = new FlashCard("front_2", "back_2");
+        testDeck.addFlashCard(testcard_2);
+        assertEquals(testcard_2, testDeck.get(1));
+    }
 }
