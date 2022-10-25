@@ -1,9 +1,14 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 
 // Represents a deck with a name, course, and a list of FlashCards
-public class Deck {
+public class Deck implements Writable {
     private String name;
     private String course;
     private ArrayList<FlashCard> cardsInDeck;
@@ -68,4 +73,28 @@ public class Deck {
         }
     }
 
+    // TODO: add tests
+    // EFFECTS: returns current deck data
+    // Source: JsonSerializationDemo
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", this.name);
+        json.put("course", this.course);
+        json.put("cardsInDeck", cardsInDeckToJson());
+        return json;
+    }
+
+    // TODO: add tests
+    // EFFECTS: returns flaschards in this deck as a JSON array
+    // Source: JsonSerializationDemo
+    private JSONArray cardsInDeckToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (FlashCard f : cardsInDeck) {
+            jsonArray.put(f.toJson());
+        }
+
+        return jsonArray;
+    }
 }

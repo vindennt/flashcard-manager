@@ -1,7 +1,12 @@
 package model;
 
+import org.json.JSONObject;
+import persistence.Writable;
+
+import java.io.Writer;
+
 // Represents a FlashCard with a front side and back side
-public class FlashCard {
+public class FlashCard implements Writable {
     private String front;
     private String back;
 
@@ -22,5 +27,17 @@ public class FlashCard {
     public String getBack() {
         return this.back;
     }
+
+    // TODO: add tests
+    // EFFECTS: returns the flashcard's front and back as a json object
+    // Source: JsonSerializationDemo
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("front", this.front);
+        json.put("back", this.back);
+        return json;
+    }
+
 
 }

@@ -1,85 +1,71 @@
-////
-//// Source code recreated from a .class file by IntelliJ IDEA
-//// (powered by FernFlower decompiler)
-////
-//
-//package persistence;
-//
-//import java.io.IOException;
-//import java.nio.charset.StandardCharsets;
-//import java.nio.file.Files;
-//import java.nio.file.Paths;
-//import java.util.Iterator;
-//import java.util.stream.Stream;
-//import org.json.JSONArray;
-//import org.json.JSONObject;
-//
-//public class JsonReader {
-//    private String source;
-//
-//    public JsonReader(String source) {
-//        this.source = source;
-//    }
-//
-//    public Deck read() throws IOException {
-//        String jsonData = this.readFile(this.source);
-//        JSONObject jsonObject = new JSONObject(jsonData);
-//        return this.parseDeck(jsonObject);
-//    }
-//
-//    private String readFile(String source) throws IOException {
-//        StringBuilder contentBuilder = new StringBuilder();
-//        Stream<String> stream = Files.lines(Paths.get(source), StandardCharsets.UTF_8);
-//        Throwable var4 = null;
-//
-//        try {
-//            stream.forEach((s) -> {
-//                contentBuilder.append(s);
-//            });
-//        } catch (Throwable var13) {
-//            var4 = var13;
-//            throw var13;
-//        } finally {
-//            if (stream != null) {
-//                if (var4 != null) {
-//                    try {
-//                        stream.close();
-//                    } catch (Throwable var12) {
-//                        var4.addSuppressed(var12);
-//                    }
-//                } else {
-//                    stream.close();
-//                }
-//            }
-//
-//        }
-//
-//        return contentBuilder.toString();
-//    }
-//
-//    private Deck parseDeck(JSONObject jsonObject) {
-//        String name = jsonObject.getString("name");
-//        Deck wr = new Deck(name);
-//        this.addThingies(wr, jsonObject);
-//        return wr;
-//    }
-//
-//    private void addThingies(Deck d, JSONObject jsonObject) {
-//        JSONArray jsonArray = jsonObject.getJSONArray("thingies");
-//        Iterator var4 = jsonArray.iterator();
-//
-//        while(var4.hasNext()) {
-//            Object json = var4.next();
-//            JSONObject nextThingy = (JSONObject)json;
-//            this.addThingy(wr, nextThingy);
-//        }
-//
-//    }
-//
-//    private void addThingy(Deck d, JSONObject jsonObject) {
-//        String name = jsonObject.getString("name");
-//        Category category = Category.valueOf(jsonObject.getString("category"));
-//        Thingy thingy = new Thingy(name, category);
-//        wr.addThingy(thingy);
-//    }
-//}
+// Source: JsonSerializationDemo
+
+package persistence;
+
+import model.Deck;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
+
+import model.FlashCard;
+import org.json.*;
+
+// Represents a reader that reads workroom from JSON data stored in file
+public class JsonReader {
+    private String source;
+
+    // EFFECTS: constructs reader to read from source file
+    public JsonReader(String source) {
+        this.source = source;
+    }
+
+    // EFFECTS: reads deck from file and returns it;
+    // throws IOException if an error occurs reading data from file
+    public Deck read() throws IOException {
+        String jsonData = readFile(source);
+        JSONObject jsonObject = new JSONObject(jsonData);
+        return parseDeck(jsonObject);
+    }
+
+    // EFFECTS: reads source file as string and returns it
+    private String readFile(String source) throws IOException {
+        StringBuilder contentBuilder = new StringBuilder();
+
+        try (Stream<String> stream = Files.lines(Paths.get(source), StandardCharsets.UTF_8)) {
+            stream.forEach(s -> contentBuilder.append(s));
+        }
+
+        return contentBuilder.toString();
+    }
+
+    // EFFECTS: parses deck from JSON object and returns it
+    private Deck parseDeck(JSONObject jsonObject) {
+        String name = jsonObject.getString("name");
+        String course = jsonObject.getString("course");
+        Deck d = new Deck(name, course);
+        addDeck(d, jsonObject);
+        return d;
+    }
+
+    // MODIFIES: d
+    // EFFECTS: parses thingies from JSON object and adds them to deck
+    private void addDeck(Deck d, JSONObject jsonObject) {
+        JSONArray jsonArray = jsonObject.getJSONArray("cardsInDeck");
+        for (Object json : jsonArray) {
+            JSONObject nextFlashCard = (JSONObject) json;
+            addFlashCard(d, nextFlashCard);
+        }
+    }
+
+    // MODIFIES: d
+    // EFFECTS: parses flashcard from JSON object and adds it to deck
+    private void addFlashCard(Deck d, JSONObject jsonObject) {
+        String front = jsonObject.getString("front");
+        String back = jsonObject.getString("back");
+        FlashCard flashCard = new FlashCard(front, back);
+        d.addFlashCard(flashCard);
+    }
+}
