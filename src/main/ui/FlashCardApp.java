@@ -2,7 +2,12 @@ package ui;
 
 import model.Deck;
 import model.FlashCard;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -11,9 +16,14 @@ public class FlashCardApp {
     private Scanner input;            // monitors input
     private ArrayList<Deck> deckList; // list of all decks
     private int lastChosenCardIndex;  // tracks last chosen flashcard index
+    private JsonWriter jsonWriter;    // deck saver
+    private JsonReader jsonReader;    // deck loader
+    private String fileName;          // tracks fileName set by user
+    private String jsonFileLocation; // tracks file save location
+
 
     // EFFECTS: runs flashcard application
-    public FlashCardApp() {
+    public FlashCardApp() throws FileNotFoundException {
         runFlashCardApp();
     }
 
@@ -39,12 +49,13 @@ public class FlashCardApp {
     }
 
     // MODIFIES: this
-    // EFFECTS: initializes decklist, input tracker, and last chosen card
+    // EFFECTS: initializes variables and default save name and location
     private void init() {
         deckList = new ArrayList<>();
         input = new Scanner(System.in);
         input.useDelimiter("\n");
         lastChosenCardIndex = 0;
+        updateFileLocation("Default"); // sets default file location
     }
 
     // EFFECTS: displays home screen menu options
@@ -78,6 +89,9 @@ public class FlashCardApp {
         System.out.println("\ta -> add flashcard");
         System.out.println("\te -> edit flashcard");
         System.out.println("\td -> delete flashcard");
+        System.out.println("_______________________");
+        System.out.println("\ts -> save deck");
+        System.out.println("\tl -> load deck");
         System.out.println("\tb -> back to home screen");
     }
 
@@ -95,6 +109,10 @@ public class FlashCardApp {
             doEditCard(chosenDeck);
         } else if (command.equals("d")) {
             doDeleteCard(chosenDeck);
+        } else if (command.equals("s")) {
+            doSaveDeck(chosenDeck);
+        } else if (command.equals("l")) {
+            doLoadDeck();
         } else {
             System.out.println("Invalid command");
         }
@@ -289,5 +307,40 @@ public class FlashCardApp {
         deckList.add(deckToAdd);
         System.out.println("Added deck " + name + " for course " + course + " to deck list.");
         System.out.println("Back to home screen...");
+    }
+
+
+    private void updateFileLocation(String filename) {
+        jsonFileLocation = "./data/" + filename + ".json";
+        jsonWriter = new JsonWriter(jsonFileLocation);
+        jsonReader = new JsonReader(jsonFileLocation);
+    }
+
+    // EFFECTS: saves the deck to a file
+    private void doSaveDeck(Deck deck) {
+        try {
+            fileName = deck.getName() + deck.getCourse();
+            updateFileLocation(fileName);
+            jsonWriter.open();
+            jsonWriter.write(deck);
+            jsonWriter.close();
+            System.out.println("Saved deck" + deck.getName() + deck.getCourse() + " to " + jsonFileLocation);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + jsonFileLocation);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads deck from a file to decklist
+    private void doLoadDeck() {
+        System.out.println("Load which file? ('NameCourse'; Example: AbstractionCPSC 210)");
+        String fileToLoad = input.next();
+        updateFileLocation(fileToLoad);
+        try {
+            Deck deckToLoad = jsonReader.read();
+            System.out.println("Loaded " + deckToLoad.getName() + " from " + jsonFileLocation);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + jsonFileLocation);
+        }
     }
 }
