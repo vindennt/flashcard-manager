@@ -1,0 +1,14 @@
+{
+  "cardsInDeck": [
+    {
+      "front": "1 + 2?",
+      "back": "3"
+    },
+    {
+      "front": "Worst food in the world?",
+      "back": "Mushrooms"
+    }
+  ],
+  "name": "General deck",
+  "course": "CPSC 210"
+}

@@ -5,7 +5,8 @@ import org.json.JSONObject;
 import persistence.Writable;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collections;
+import java.util.List;
 
 // Represents a deck with a name, course, and a list of FlashCards
 public class Deck implements Writable {
@@ -66,14 +67,13 @@ public class Deck implements Writable {
     // EFFECTS: sets flashcard at index in the deck to input card
     public void setFlashCard(int index, FlashCard newCard) {
         if ((index < 0) || (index >= cardsInDeck.size())) {
-            // TODO: exception?
             System.out.println("Invalid index");
         } else {
             cardsInDeck.set(index, newCard);
         }
     }
 
-    // TODO: add tests
+    // TODO: add tests?
     // EFFECTS: returns current deck data
     // Source: JsonSerializationDemo
     @Override
@@ -85,7 +85,7 @@ public class Deck implements Writable {
         return json;
     }
 
-    // TODO: add tests
+    // TODO: add tests?
     // EFFECTS: returns flaschards in this deck as a JSON array
     // Source: JsonSerializationDemo
     private JSONArray cardsInDeckToJson() {
@@ -96,5 +96,12 @@ public class Deck implements Writable {
         }
 
         return jsonArray;
+    }
+
+    // EFFECTS: returns an unmodifiable list of flashcards from this deck
+    // Source: JsonSerializationDemo
+    // TODO: add tests?
+    public List<FlashCard> getCardsInDeck() {
+        return Collections.unmodifiableList(cardsInDeck);
     }
 }
