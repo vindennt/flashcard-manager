@@ -19,6 +19,17 @@ public class JsonWriter {
         this.destination = destination;
     }
 
+    public String getDestination() {
+        return this.destination;
+    }
+
+    // REQUIRES: newDestination is not empty
+    // MODIFIES: this
+    // EFFECTS: sets destination
+    public void setDestination(String newDestination) {
+        this.destination = newDestination;
+    }
+
     // MODIFIES: this
     // EFFECTS: opens writer; throws FileNotFoundException if destination file cannot
     // be opened for writing

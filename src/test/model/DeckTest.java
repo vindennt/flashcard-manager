@@ -29,8 +29,22 @@ public class DeckTest {
     }
 
     @Test
-    public void testGetSubject() {
+    public void testGetCourse() {
         assertEquals(TEST_COURSE, testDeck.getCourse());
+    }
+
+    @Test
+    public void testSetName() {
+        String newName = "RESET_NAME";
+        testDeck.setName(newName);
+        assertEquals(newName, testDeck.getName());
+    }
+
+    @Test
+    public void testSetCourse() {
+        String newCourse = "RESET_COURSE";
+        testDeck.setCourse(newCourse);
+        assertEquals(newCourse, testDeck.getCourse());
     }
 
     @Test

@@ -14,6 +14,23 @@ import static org.junit.jupiter.api.Assertions.*;
 public class JsonWriterTest extends JsonTest {
 
     @Test
+    void testGetDestination() {
+        String destination = "./data/test_destination.json";
+        JsonWriter writer = new JsonWriter(destination);
+        assertEquals(destination, writer.getDestination());
+    }
+
+    @Test
+    void testSetDestination() {
+        String oldDestination = "./data/old_destination.json";
+        String newDestination = "./data/new_destination.json";
+        JsonWriter writer = new JsonWriter(oldDestination);
+        assertEquals(oldDestination, writer.getDestination());
+        writer.setDestination(newDestination);
+        assertEquals(newDestination, writer.getDestination());
+    }
+
+    @Test
     void testWriterInvalidFile() {
         try {
             Deck d = new Deck("Invalid Deck", "CPSC 210");

@@ -19,8 +19,8 @@ The user stories that I wish to fulfill are:
 
 ### P2
 
-- As a user, I want to be able to save a flashcard decks to a file
-- As a user, I want to be able to load flashcard decks from a file
+- As a user, I want to be able to save a deck to a file
+- As a user, I want to be able to load a deck from a file
 
 
 

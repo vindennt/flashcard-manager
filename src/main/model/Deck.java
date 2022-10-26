@@ -33,6 +33,20 @@ public class Deck implements Writable {
         return this.course;
     }
 
+    // REQUIRES: newName is not empty
+    // MODIFIES: this
+    // EFFECTS: sets new deck name
+    public void setName(String newName) {
+        this.name = newName;
+    }
+
+    // REQUIRES: newName is not empty
+    // MODIFIES: this
+    // EFFECTS: sets new deck course
+    public void setCourse(String newCourse) {
+        this.course = newCourse;
+    }
+
     // EFFECTS: returns TRUE if deck contains specified flashcard, else false
     public boolean contains(FlashCard flashCard) {
         return cardsInDeck.contains(flashCard);

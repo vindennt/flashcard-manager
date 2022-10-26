@@ -22,6 +22,17 @@ public class JsonReader {
         this.source = source;
     }
 
+    public String getSource() {
+        return this.source;
+    }
+
+    // REQUIRES: newSource is not empty
+    // MODIFIES: this
+    // EFFECTS: sets source
+    public void setSource(String newSource) {
+        this.source = newSource;
+    }
+
     // EFFECTS: reads deck from file and returns it;
     // throws IOException if an error occurs reading data from file
     public Deck read() throws IOException {
@@ -51,7 +62,7 @@ public class JsonReader {
     }
 
     // MODIFIES: d
-    // EFFECTS: parses thingies from JSON object and adds them to deck
+    // EFFECTS: parses flashcards from JSON object and adds them to deck
     private void addDeck(Deck d, JSONObject jsonObject) {
         JSONArray jsonArray = jsonObject.getJSONArray("cardsInDeck");
         for (Object json : jsonArray) {

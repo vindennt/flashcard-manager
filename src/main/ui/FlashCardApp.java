@@ -5,7 +5,6 @@ import model.FlashCard;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,7 +54,7 @@ public class FlashCardApp {
         input = new Scanner(System.in);
         input.useDelimiter("\n");
         lastChosenCardIndex = 0;
-        updateFileLocation("Default"); // sets default file location
+        updateTargetFileLocation("Default"); // sets default file location
     }
 
     // EFFECTS: displays home screen menu options
@@ -63,6 +62,7 @@ public class FlashCardApp {
         System.out.println("\nHOME: Select command:");
         System.out.println("\tn -> new deck");
         System.out.println("\tc -> choose deck");
+        System.out.println("\tl -> load deck");
         System.out.println("\tx -> exit");
     }
 
@@ -71,6 +71,8 @@ public class FlashCardApp {
     private void processHomeCommand(String command) {
         if (command.equals("n")) {
             doAddNewDeck();
+        } else if (command.equals("l")) {
+            doLoadDeck();
         } else if (command.equals("c")) {
             if (deckList.size() == 0) {
                 System.out.println("No decks available");
@@ -85,13 +87,13 @@ public class FlashCardApp {
     // EFFECTS: displays deck menu options
     private void displayDeckMenu() {
         System.out.println("\nDECK: Select command:");
-        System.out.println("\tr -> review deck");
+        System.out.println("\tr -> review session");
         System.out.println("\ta -> add flashcard");
         System.out.println("\te -> edit flashcard");
         System.out.println("\td -> delete flashcard");
         System.out.println("_______________________");
+        System.out.println("\tc -> change name and course");
         System.out.println("\ts -> save deck");
-        System.out.println("\tl -> load deck");
         System.out.println("\tb -> back to home screen");
     }
 
@@ -111,8 +113,8 @@ public class FlashCardApp {
             doDeleteCard(chosenDeck);
         } else if (command.equals("s")) {
             doSaveDeck(chosenDeck);
-        } else if (command.equals("l")) {
-            doLoadDeck();
+        } else if (command.equals("c")) {
+            doChangeDeckNameCourse(chosenDeck);
         } else {
             System.out.println("Invalid command");
         }
@@ -309,8 +311,16 @@ public class FlashCardApp {
         System.out.println("Back to home screen...");
     }
 
+    private void doChangeDeckNameCourse(Deck chosenDeck) {
+        System.out.print("New deck name: ");
+        String newName = input.next();
+        System.out.print("New deck course: ");
+        String newCourse = input.next();
+        chosenDeck.setName(newName);
+        chosenDeck.setCourse(newCourse);
+    }
 
-    private void updateFileLocation(String filename) {
+    private void updateTargetFileLocation(String filename) {
         jsonFileLocation = "./data/" + filename + ".json";
         jsonWriter = new JsonWriter(jsonFileLocation);
         jsonReader = new JsonReader(jsonFileLocation);
@@ -320,7 +330,7 @@ public class FlashCardApp {
     private void doSaveDeck(Deck deck) {
         try {
             fileName = deck.getName() + deck.getCourse();
-            updateFileLocation(fileName);
+            updateTargetFileLocation(fileName);
             jsonWriter.open();
             jsonWriter.write(deck);
             jsonWriter.close();
@@ -335,9 +345,10 @@ public class FlashCardApp {
     private void doLoadDeck() {
         System.out.println("Load which file? ('NameCourse'; Example: AbstractionCPSC 210)");
         String fileToLoad = input.next();
-        updateFileLocation(fileToLoad);
+        updateTargetFileLocation(fileToLoad);
         try {
             Deck deckToLoad = jsonReader.read();
+            deckList.add(deckToLoad);
             System.out.println("Loaded " + deckToLoad.getName() + " from " + jsonFileLocation);
         } catch (IOException e) {
             System.out.println("Unable to read from file: " + jsonFileLocation);
