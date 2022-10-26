@@ -1,8 +1,15 @@
 package model;
 
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -168,4 +175,82 @@ public class DeckTest {
         testDeck.addFlashCard(testcard_2);
         assertEquals(testcard_2, testDeck.get(1));
     }
+
+    @Test
+    public void testGetCardsInEmptyDeck() {
+        List<FlashCard> empty = new ArrayList<>();
+        assertEquals(empty, testDeck.getCardsInDeck());
+    }
+
+    @Test
+    public void testGetCardsInDeck() {
+        List<FlashCard> testList = new ArrayList<>();
+        testList.add(testCard);
+        testDeck.addFlashCard(testCard);
+        assertEquals(testList, testDeck.getCardsInDeck());
+    }
+
+    @Test
+    public void testGetMultipleCardsInDeck() {
+        List<FlashCard> testList = new ArrayList<>();
+        testList.add(testCard);
+        testList.add(testCard);
+        testDeck.addFlashCard(testCard);
+        testDeck.addFlashCard(testCard);
+        assertEquals(testList, testDeck.getCardsInDeck());
+    }
+
+    @Test
+    public void testCardsInDeckToJson() {
+        JSONArray expectedCardListJson = new JSONArray();
+        expectedCardListJson.put(testCard.toJson());
+        assertFalse(expectedCardListJson.isEmpty());
+        JSONObject expectedCard = (JSONObject) expectedCardListJson.get(0);
+        String expectedFront = expectedCard.getString("front");
+        String expectedBack = expectedCard.getString("back");
+        assertEquals(expectedFront, TEST_FRONT);
+        assertEquals(expectedBack, TEST_BACK);
+    }
+
+    @Test
+    public void testToJsonEmptyDeck() {
+        JSONObject expectedDeckJson = new JSONObject();
+        JSONArray expectedCardListJson = new JSONArray();
+        expectedDeckJson.put("name", TEST_NAME);
+        expectedDeckJson.put("course", TEST_COURSE);
+        expectedDeckJson.put("cardsInDeck", expectedCardListJson);
+
+        String expectedName = expectedDeckJson.getString("name");
+        String expectedCourse = expectedDeckJson.getString("course");
+        JSONArray expectedCardList = expectedDeckJson.getJSONArray("cardsInDeck");
+        assertEquals(expectedName, TEST_NAME);
+        assertEquals(expectedCourse, TEST_COURSE);
+        assertTrue(expectedCardList.isEmpty());
+    }
+
+    @Test
+    public void testToJsonOneCardDeck() {
+        JSONObject expectedDeckJson = new JSONObject();
+        JSONArray expectedCardListJson = new JSONArray();
+        expectedCardListJson.put(testCard.toJson());
+        expectedDeckJson.put("name", TEST_NAME);
+        expectedDeckJson.put("course", TEST_COURSE);
+        expectedDeckJson.put("cardsInDeck", expectedCardListJson);
+
+        String expectedName = expectedDeckJson.getString("name");
+        String expectedCourse = expectedDeckJson.getString("course");
+        JSONArray expectedCardList = expectedDeckJson.getJSONArray("cardsInDeck");
+        assertEquals(expectedName, TEST_NAME);
+        assertEquals(expectedCourse, TEST_COURSE);
+        assertFalse(expectedCardList.isEmpty());
+
+        JSONObject expectedCard = (JSONObject) expectedCardList.get(0);
+        String expectedFront = expectedCard.getString("front");
+        String expectedBack = expectedCard.getString("back");
+        assertEquals(expectedFront, TEST_FRONT);
+        assertEquals(expectedBack, TEST_BACK);
+    }
+
+
+
 }

@@ -1,3 +1,8 @@
+// Reference: JsonSerializationDemo
+// Git: https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git
+// Author: Paul Carter
+// Contribution: cardsInDeck and getCardsInDeck method templates
+
 package model;
 
 import org.json.JSONArray;
@@ -87,9 +92,13 @@ public class Deck implements Writable {
         }
     }
 
+    // EFFECTS: returns an unmodifiable list of flashcards from this deck
+    public List<FlashCard> getCardsInDeck() {
+        return Collections.unmodifiableList(cardsInDeck);
+    }
+
     // TODO: add tests?
     // EFFECTS: returns current deck data
-    // Source: JsonSerializationDemo
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
@@ -101,7 +110,6 @@ public class Deck implements Writable {
 
     // TODO: add tests?
     // EFFECTS: returns flaschards in this deck as a JSON array
-    // Source: JsonSerializationDemo
     private JSONArray cardsInDeckToJson() {
         JSONArray jsonArray = new JSONArray();
 
@@ -112,10 +120,4 @@ public class Deck implements Writable {
         return jsonArray;
     }
 
-    // EFFECTS: returns an unmodifiable list of flashcards from this deck
-    // Source: JsonSerializationDemo
-    // TODO: add tests?
-    public List<FlashCard> getCardsInDeck() {
-        return Collections.unmodifiableList(cardsInDeck);
-    }
 }

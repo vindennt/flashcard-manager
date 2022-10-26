@@ -1,4 +1,7 @@
-// Source: JsonSerializationDemo
+// Reference: JsonSerializationDemo
+// Git: https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git
+// Author: Paul Carter
+// Contribution: Method templates for all in this class
 
 package persistence;
 

@@ -1,3 +1,8 @@
+// Reference: JsonSerializationDemo
+// Git: https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git
+// Author: Paul Carter
+// Contribution: Some parts of doLoadDeck and doSaveDeck methods
+
 package ui;
 
 import model.Deck;

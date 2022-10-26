@@ -1,3 +1,8 @@
+// Reference: JsonSerializationDemo
+// Git: https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git
+// Author: Paul Carter
+// Contribution: toJson method template
+
 package model;
 
 import org.json.JSONObject;
@@ -26,9 +31,7 @@ public class FlashCard implements Writable {
         return this.back;
     }
 
-    // TODO: add tests?
     // EFFECTS: returns the flashcard's front and back as a json object
-    // Source: JsonSerializationDemo
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();

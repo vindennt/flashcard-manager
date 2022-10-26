@@ -1,5 +1,6 @@
 package model;
 
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,5 +29,15 @@ public class FlashCardTest {
         assertEquals(TEST_BACK, testBack);
     }
 
-
+    @Test
+    public void testToJson() {
+        JSONObject expectedJson = new JSONObject();
+        expectedJson.put("front", TEST_FRONT);
+        expectedJson.put("back", TEST_BACK);
+        String expectedFront = expectedJson.getString("front");
+        String expectedBack = expectedJson.getString("back");
+        assertEquals(expectedFront, TEST_FRONT);
+        assertEquals(expectedBack, TEST_BACK);
+    }
 }
+
