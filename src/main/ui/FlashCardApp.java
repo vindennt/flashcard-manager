@@ -17,8 +17,7 @@ public class FlashCardApp {
     private int lastChosenCardIndex;  // tracks last chosen flashcard index
     private JsonWriter jsonWriter;    // deck saver
     private JsonReader jsonReader;    // deck loader
-    private String fileName;          // tracks fileName set by user
-    private String jsonFileLocation; // tracks file save location
+    private String jsonFileLocation;  // tracks target file location
 
 
     // EFFECTS: runs flashcard application
@@ -54,6 +53,8 @@ public class FlashCardApp {
         input = new Scanner(System.in);
         input.useDelimiter("\n");
         lastChosenCardIndex = 0;
+        jsonWriter = new JsonWriter("");
+        jsonReader = new JsonReader("");
         updateTargetFileLocation("Default"); // sets default file location
     }
 
@@ -128,7 +129,7 @@ public class FlashCardApp {
 
         System.out.print("Card front: ");
         front = input.next();
-        System.out.print("Card back: ");
+        System.out.print("Set card back: ");
         back = input.next();
         newCard = new FlashCard(front, back);
         return newCard;
@@ -322,14 +323,14 @@ public class FlashCardApp {
 
     private void updateTargetFileLocation(String filename) {
         jsonFileLocation = "./data/" + filename + ".json";
-        jsonWriter = new JsonWriter(jsonFileLocation);
-        jsonReader = new JsonReader(jsonFileLocation);
+        jsonWriter.setDestination(jsonFileLocation);
+        jsonReader.setSource(jsonFileLocation);
     }
 
     // EFFECTS: saves the deck to a file
     private void doSaveDeck(Deck deck) {
         try {
-            fileName = deck.getName() + deck.getCourse();
+            String fileName = deck.getName() + deck.getCourse();
             updateTargetFileLocation(fileName);
             jsonWriter.open();
             jsonWriter.write(deck);
