@@ -97,7 +97,6 @@ public class Deck implements Writable {
         return Collections.unmodifiableList(cardsInDeck);
     }
 
-    // TODO: add tests?
     // EFFECTS: returns current deck data
     @Override
     public JSONObject toJson() {
@@ -108,7 +107,6 @@ public class Deck implements Writable {
         return json;
     }
 
-    // TODO: add tests?
     // EFFECTS: returns flaschards in this deck as a JSON array
     private JSONArray cardsInDeckToJson() {
         JSONArray jsonArray = new JSONArray();

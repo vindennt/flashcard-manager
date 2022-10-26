@@ -41,6 +41,7 @@ public class FlashCardApp {
             displayHomeMenu();
             command = input.next();
             command = command.toLowerCase();
+            // Remind to save before exiting
             if (command.equals("x")) {
                 System.out.println("All unsaved data will be lost. Proceed?");
                 System.out.println("\tno = return to homescreen");
@@ -53,6 +54,7 @@ public class FlashCardApp {
                 } else {
                     System.out.println("Invalid command");
                 }
+                // end of exiting process
             } else {
                 processHomeCommand(command);
             }
@@ -69,7 +71,7 @@ public class FlashCardApp {
         lastChosenCardIndex = 0;
         jsonWriter = new JsonWriter("");
         jsonReader = new JsonReader("");
-        updateTargetFileLocation("Default"); // sets default file location
+        updateTargetFileLocation("Default"); // sets a default target file location
     }
 
     // EFFECTS: displays home screen menu options
@@ -165,6 +167,7 @@ public class FlashCardApp {
         String front;
         String back;
         System.out.println("Displaying flashcards in deck...");
+        //boolean proceed = false;
 
         for (int i = 0; i < chosenDeck.size(); i++) {
             FlashCard currentFlashCard = chosenDeck.get(i);
@@ -175,6 +178,11 @@ public class FlashCardApp {
         }
         System.out.print("Choose flashcard ID: ");
         int command = input.nextInt();
+        //while (!proceed) {
+        //    int command = input.nextInt();
+       //
+       // }
+
         // TODO throw exception or request a new input if invalid
         if ((command < 0) || (command >= chosenDeck.size())) {
             System.out.println("Invalid ID");
@@ -345,9 +353,9 @@ public class FlashCardApp {
 
     // REQUIRES: filePath is not empty
     // EFFECTS: returns true if file with name filePath exists, else false.
-    private boolean isExistingFile(String filePath) {
-        File f = new File(filePath);
-        return (f.exists() && !f.isDirectory());
+    private boolean isOccupiedFilepath(String filePath) {
+        File file = new File(filePath);
+        return (file.exists() && !file.isDirectory());
     }
 
     // EFFECTS: initiates saving the deck to a file and warns if file already exists
@@ -356,7 +364,7 @@ public class FlashCardApp {
             String fileName = deck.getName() + deck.getCourse();
             updateTargetFileLocation(fileName);
 
-            if (isExistingFile(jsonFileLocation)) {
+            if (isOccupiedFilepath(jsonFileLocation)) {
                 String command;
                 System.out.println("File named " + fileName + ".json already exists. Overwrite?");
                 System.out.println("\tno = do not overwrite existing file");
