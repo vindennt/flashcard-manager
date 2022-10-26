@@ -7,6 +7,7 @@ package persistence;
 
 import model.Deck;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -51,7 +52,6 @@ public class JsonReader {
         try (Stream<String> stream = Files.lines(Paths.get(source), StandardCharsets.UTF_8)) {
             stream.forEach(s -> contentBuilder.append(s));
         }
-
         return contentBuilder.toString();
     }
 
@@ -82,4 +82,5 @@ public class JsonReader {
         FlashCard flashCard = new FlashCard(front, back);
         d.addFlashCard(flashCard);
     }
+
 }
