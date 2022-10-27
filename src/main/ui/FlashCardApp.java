@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 // Flashcard storage and review application
@@ -163,31 +164,22 @@ public class FlashCardApp {
 
     // EFFECTS: displays all flashcards in deck and returns the flashcard at index chosen by user
     private FlashCard selectFlashCard(Deck chosenDeck) {
-        int index;
-        String front;
-        String back;
         System.out.println("Displaying flashcards in deck...");
-        //boolean proceed = false;
+        boolean proceed = false;
+        displayFlashCardsFromList(chosenDeck.getCardsInDeck(), true);
 
-        for (int i = 0; i < chosenDeck.size(); i++) {
-            FlashCard currentFlashCard = chosenDeck.get(i);
-            index = i;
-            front = currentFlashCard.getFront();
-            back = currentFlashCard.getBack();
-            System.out.println("\tID: " + index + ", Front: " + front + ", Back: " + back);
+        int command = 0;
+        // Waits until user inputs a valid FlashCard ID
+        while (!proceed) {
+            System.out.print("Choose flashcard ID: ");
+            command = input.nextInt();
+            if ((command < 0) || (command >= chosenDeck.size())) {
+                System.out.println("Invalid ID");
+            } else {
+                proceed = true;
+                lastChosenCardIndex = command;
+            }
         }
-        System.out.print("Choose flashcard ID: ");
-        int command = input.nextInt();
-        //while (!proceed) {
-        //    int command = input.nextInt();
-       //
-       // }
-
-        // TODO throw exception or request a new input if invalid
-        if ((command < 0) || (command >= chosenDeck.size())) {
-            System.out.println("Invalid ID");
-        }
-        lastChosenCardIndex = command;
         return chosenDeck.get(command);
     }
 
@@ -238,7 +230,7 @@ public class FlashCardApp {
             }
         }
         displayReviewEndMessage(cardsToDisplay.size(), cardsIncorrect.size());
-        displayFlashCardsFromList(cardsIncorrect);
+        displayFlashCardsFromList(cardsIncorrect, false);
     }
 
 
@@ -256,15 +248,26 @@ public class FlashCardApp {
     }
 
     // REQUIRES: cardsToDisplay.size() != 0
-    // EFFECTS: displays fronts and back of all flashcards from cardsToDisplay
-    private void displayFlashCardsFromList(ArrayList<FlashCard> cardsToDisplay) {
+    // EFFECTS: displays fronts and back of all flashcards from cardsToDisplay, and index if showIndex is true.
+    private void displayFlashCardsFromList(List<FlashCard> cardsToDisplay, boolean showIndex) {
+        int index;
+        String front;
+        String back;
+
         if (cardsToDisplay.size() == 0) {
             // ignore method if no cards to display
-            // TODO: throw exception?
+        } else if (showIndex) {
+            for (int i = 0; i < cardsToDisplay.size(); i++) {
+                FlashCard currentFlashCard = cardsToDisplay.get(i);
+                index = i;
+                front = currentFlashCard.getFront();
+                back = currentFlashCard.getBack();
+                System.out.println("\tID: " + index + ", Front: " + front + ", Back: " + back);
+            }
         } else {
             for (FlashCard c : cardsToDisplay) {
-                String front = c.getFront();
-                String back = c.getBack();
+                front = c.getFront();
+                back = c.getBack();
                 System.out.println("\tFront: " + front + ", Back: " + back);
             }
         }
@@ -292,12 +295,31 @@ public class FlashCardApp {
     }
 
     // REQUIRES: deckList is not empty
-    // EFFECTS: display all decks with an index and returns user-chosen deck
+    // EFFECTS: displays all decks and returns user-chosen deck
     private Deck selectDeck() {
+        System.out.println("Displaying deck list...");
+        displayDeckList();
+        boolean proceed = false;
+        int command = 0;
+
+        while (!proceed) {
+            System.out.print("Choose deck ID: ");
+            command = input.nextInt();
+            if ((command < 0) || (command >= deckList.size())) {
+                System.out.println("Invalid ID");
+            } else {
+                proceed = true;
+            }
+        }
+        return deckList.get(command);
+    }
+
+    // REQUIRES: deckList is not empty
+    // EFFECTS: display all decks with an index
+    private void displayDeckList() {
         int index;
         String name;
         String course;
-        System.out.println("Displaying deck list...");
 
         for (int i = 0; i < deckList.size(); i++) {
             Deck currentDeck = deckList.get(i);
@@ -306,14 +328,6 @@ public class FlashCardApp {
             course = currentDeck.getCourse();
             System.out.println("\tID: " + index + ", Name: " + name + ", Course: " + course);
         }
-
-        System.out.print("Choose deck ID: ");
-        int command = input.nextInt();
-        // TODO throw exception or request a new input if invalid
-        if ((command < 0) || (command >= deckList.size())) {
-            System.out.println("Invalid ID");
-        }
-        return deckList.get(command);
     }
 
     // MODIFIES: this
