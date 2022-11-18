@@ -12,6 +12,7 @@ import persistence.Writable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 // Represents a deck with a name, course, and a list of FlashCards
 public class Deck implements Writable {
@@ -118,4 +119,16 @@ public class Deck implements Writable {
         return jsonArray;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Deck deck = (Deck) o;
+        return name.equals(deck.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
 }
