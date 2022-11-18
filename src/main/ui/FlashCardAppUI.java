@@ -6,7 +6,8 @@
 package ui;
 
 import model.Deck;
-import model.DuplicateDeckException;
+import exceptions.DuplicateDeckException;
+import model.FlashCard;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
@@ -24,12 +25,14 @@ import java.util.HashMap;
 public class FlashCardAppUI extends JFrame implements ActionListener {
     private static final int WIDTH = 800;
     private static final int HEIGHT = 600;
-    //private static final String FILE_DESCRIPTOR = "...file";
-    //private static final String SCREEN_DESCRIPTOR = "...screen";
     private JComboBox<String> deckSelectorCombo;         // contains display names to access decks
     private HashMap<String, Deck> deckSelectorReference; // name reference to access actual decks
+
+    private HashMap<String, FlashCard> cardSelectorReference;
+
     private JDesktopPane desktop;
     private JInternalFrame selectionPanel;
+    private JInternalFrame deckPanel;
 
     private ArrayList<Deck> deckList;
 
@@ -42,8 +45,6 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
      */
     public FlashCardAppUI() throws FileNotFoundException {
         init();
-        //fca.addAlarmObserver(new AlarmSiren());
-
         desktop = new JDesktopPane();
         desktop.addMouseListener(new DesktopFocusAction());
         selectionPanel = new JInternalFrame("Home Menu", false, false, false, false);
@@ -61,11 +62,9 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
 
         addSelectionPanel();
         addMenu();
-        //addKeyPad();
-        //addAlarmDisplayPanel();
 
-        //Remote r = new Remote(fca);
-        //addRemote(r);
+        Deck selectedDeck = new Deck("", "");
+        addDeckPanel(selectedDeck);
 
         selectionPanel.pack();
         selectionPanel.setVisible(true);
@@ -76,16 +75,23 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         setVisible(true);
     }
 
+    /**
+     * Adds user interface for remote to the system.
+     */
+    private void addDeckPanel(Deck d) {
+        DeckUI deckUI = new DeckUI(d, this);
+        desktop.add(deckUI);
+    }
+
     // MODIFIES: this
     // EFFECTS: initializes variables and default save name and location
     private void init() {
         deckList = new ArrayList<>();
-        //input = new Scanner(System.in);
-        //input.useDelimiter("\n");
         jsonWriter = new JsonWriter("");
         jsonReader = new JsonReader("");
         updateTargetFileLocation("Default"); // sets a default target file location
     }
+
 
     // EFFECTS: sets where the saver/loader should look for a file
     private void updateTargetFileLocation(String filename) {
@@ -115,15 +121,12 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         return deckSelectorCombo;
     }
 
-//
-//    /**
-//     * Helper to set up visual alarm status window
-//     */
-//    private void addAlarmDisplayPanel() {
-//        AlarmUI alarmUI = new AlarmUI();
-//        fca.addAlarmObserver(alarmUI);
-//        controlPanel.add(alarmUI, BorderLayout.NORTH);
-//    }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == deckSelectorCombo) {
+            System.out.println(deckSelectorCombo.getSelectedItem());
+        }
+    }
 
     /**
      * Adds menu bar.
@@ -161,12 +164,6 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         theMenu.add(menuItem);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == deckSelectorCombo) {
-            System.out.println(deckSelectorCombo.getSelectedItem());
-        }
-    }
 
 
     public void addDeck(Deck d) throws DuplicateDeckException {
@@ -221,36 +218,6 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
     }
 
 
-//    /**
-//     * Adds user interface for remote to the system.
-//     * @param r  the remote control
-//     */
-//    private void addRemote(Remote r) {
-//        RemoteUI rUI = new RemoteUI(r, this);
-//        desktop.add(rUI);
-//    }
-//
-//    /**
-//     * Helper to create print options combo box
-//     * @return  the combo box
-//     */
-//    private JComboBox<String> createPrintCombo() {
-//        printCombo = new JComboBox<String>();
-//        printCombo.addItem(FILE_DESCRIPTOR);
-//        printCombo.addItem(SCREEN_DESCRIPTOR);
-//        return printCombo;
-//    }
-//
-//    /**
-//     * Helper to add keypad to main application window
-//     */
-//    private void addKeyPad() {
-//        kp = new KeyPad();
-//        addKeyListener(kp);
-//        controlPanel.add(kp, BorderLayout.CENTER);
-//    }
-//
-
     /**
      * Helper to centre main application window on desktop
      */
@@ -259,30 +226,6 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         int height = Toolkit.getDefaultToolkit().getScreenSize().height;
         setLocation((width - getWidth()) / 2, (height - getHeight()) / 2);
     }
-//
-//    /**
-//     * Represents action to be taken when user wants to add a new code
-//     * to the system.
-//     */
-//    private class AddCodeAction extends AbstractAction {
-//
-//        AddCodeAction() {
-//            super("Add Code");
-//        }
-//
-//        @Override
-//        public void actionPerformed(ActionEvent evt) {
-//            AlarmCode alarmCode = new AlarmCode(kp.getCode());
-//            kp.clearCode();
-//            try {
-//                fca.addCode(alarmCode);
-//            } catch (NotValidCodeException e) {
-//                JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
-//                        JOptionPane.ERROR_MESSAGE);
-//            }
-//        }
-//    }
-//
 
     /**
      * Represents the action to be taken when the user wants to add a new
@@ -322,129 +265,6 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
     }
 
 
-//    /**
-//     * Represents the action to be taken when the user wants to remove
-//     * a code from the system.
-//     */
-//    private class RemoveCodeAction extends AbstractAction {
-//
-//        RemoveCodeAction() {
-//            super("Remove Code");
-//        }
-//
-//        @Override
-//        public void actionPerformed(ActionEvent evt) {
-//            AlarmCode alarmCode = new AlarmCode(kp.getCode());
-//            kp.clearCode();
-//            try {
-//                fca.removeCode(alarmCode);
-//            } catch (NotValidCodeException e) {
-//                JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
-//                        JOptionPane.ERROR_MESSAGE);
-//            } catch (CodeException e) {
-//                JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
-//                        JOptionPane.ERROR_MESSAGE);
-//            } catch (LastCodeException e) {
-//                JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
-//                        JOptionPane.ERROR_MESSAGE);
-//            }
-//        }
-//    }
-//
-//    /**
-//     * Represents the action to be taken when the user wants to arm
-//     * the system.
-//     */
-//    private class ArmAction extends AbstractAction {
-//
-//        ArmAction() {
-//            super("Arm System");
-//        }
-//
-//        @Override
-//        public void actionPerformed(ActionEvent evt) {
-//            AlarmCode alarmCode = new AlarmCode(kp.getCode());
-//            kp.clearCode();
-//            try {
-//                fca.arm(alarmCode);
-//            } catch (SystemNotReadyException e) {
-//                JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
-//                        JOptionPane.ERROR_MESSAGE);
-//            } catch (CodeException e) {
-//                JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
-//                        JOptionPane.ERROR_MESSAGE);
-//            }
-//        }
-//    }
-//
-//    /**
-//     * Represents the action to be taken when the user wants to
-//     * disarm the system.
-//     */
-//    private class DisarmAction extends AbstractAction {
-//
-//        DisarmAction() {
-//            super("Disarm System");
-//        }
-//
-//        @Override
-//        public void actionPerformed(ActionEvent evt) {
-//            AlarmCode alarmCode = new AlarmCode(kp.getCode());
-//            kp.clearCode();
-//
-//            try {
-//                fca.disarm(alarmCode);
-//            } catch (CodeException e) {
-//                JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
-//                        JOptionPane.ERROR_MESSAGE);
-//            }
-//        }
-//    }
-//
-//    /**
-//     * Represents the action to be taken when the user wants to
-//     * print the event log.
-//     */
-//    private class PrintLogAction extends AbstractAction {
-//        PrintLogAction() {
-//            super("Print log to...");
-//        }
-//
-//        @Override
-//        public void actionPerformed(ActionEvent evt) {
-//            String selected = (String) printCombo.getSelectedItem();
-//            LogPrinter lp;
-//            try {
-//                if (selected.equals(FILE_DESCRIPTOR))
-//                    lp = new FilePrinter();
-//                else {
-//                    lp = new ScreenPrinter(AlarmControllerUI.this);
-//                    desktop.add((ScreenPrinter) lp);
-//                }
-//
-//                lp.printLog(EventLog.getInstance());
-//            } catch (LogException e) {
-//                JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
-//                        JOptionPane.ERROR_MESSAGE);
-//            }
-//        }
-//    }
-//
-//    /**
-//     * Represents the action to be taken when the user wants to
-//     * clear the event log.
-//     */
-//    private class ClearLogAction extends AbstractAction {
-//        ClearLogAction() {
-//            super("Clear log");
-//        }
-//
-//        @Override
-//        public void actionPerformed(ActionEvent evt) {
-//            EventLog.getInstance().clear();
-//        }
-//    }
-//
 
     /**
      * Represents action to be taken when user clicks desktop
@@ -467,6 +287,5 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
             System.out.println("Unable to run: file not found");
         }
     }
-
 }
 
