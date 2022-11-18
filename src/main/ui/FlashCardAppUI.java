@@ -115,12 +115,13 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
     private void addSelectionPanel() {
         JPanel selectionPanel = new JPanel();
         JLabel selectorLabel = new JLabel("Selected Deck:");
-        selectionPanel.setLayout(new GridLayout(2, 2));
+        selectionPanel.setLayout(new GridLayout(3, 2));
 
         selectionPanel.add(new JButton(new NewDeckAction()));
         selectionPanel.add(new JButton(new ImportDeckAction()));
         selectionPanel.add(selectorLabel);
         selectionPanel.add(deckSelectorCombo);
+        selectionPanel.add(new JButton(new PrintDeckAction()));
 
         this.selectionPanel.add(selectionPanel, BorderLayout.WEST);
     }
@@ -171,7 +172,6 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         deckList.add(d);
         System.out.println("Added deck " + d.getName() + " for course " + d.getCourse() + " to deck list.");
     }
-
 
 
     /**
@@ -259,6 +259,24 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
             } catch (IOException e) {
                 System.out.println("Unable to read from file at: " + jsonFileLocation);
             }
+        }
+    }
+
+    /**
+     * Represents the action to be taken when the user wants to
+     * print the event log.
+     */
+    private class PrintDeckAction extends AbstractAction {
+        PrintDeckAction() {
+            super("Print Deck list");
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent evt) {
+            DeckPrinter dp;
+            dp = new DeckPrinter(FlashCardAppUI.this);
+            desktop.add((DeckPrinter) dp);
+            dp.printDeck(deckList);
         }
     }
 
