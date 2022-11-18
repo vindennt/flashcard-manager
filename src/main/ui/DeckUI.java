@@ -3,6 +3,8 @@ package ui;
 import exceptions.DuplicateFlashCardException;
 import model.Deck;
 import model.FlashCard;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,6 +23,10 @@ public class DeckUI extends JInternalFrame implements ActionListener {
     private JComboBox<String> cardSelectorCombo;
     private HashMap<String, FlashCard> cardSelectorReference;
     private FlashCard selectedFlashCard;
+
+    private JsonWriter jsonWriter;    // deck saver
+    private JsonReader jsonReader;    // deck loader
+    private String jsonFileLocation;  // tracks target file location
 
     /**
      * Constructor
@@ -41,7 +47,6 @@ public class DeckUI extends JInternalFrame implements ActionListener {
         this.add(new JButton(new AddCardAction()));
         this.add(new JButton(new EditCardAction()));
         this.add(new JButton(new RemoveCardAction()));
-        this.add(new JButton(new SaveDeckAction()));
         this.add(new JButton(new ReviewDeckAction()));
         this.add(new JButton(new PrintDeckAction()));
 
@@ -88,7 +93,6 @@ public class DeckUI extends JInternalFrame implements ActionListener {
         cardSelectorCombo.removeItem(name);
         cardSelectorReference.remove(name, f);
     }
-
 
     private class AddCardAction extends AbstractAction {
 
@@ -140,18 +144,6 @@ public class DeckUI extends JInternalFrame implements ActionListener {
     }
 
 
-    private class SaveDeckAction extends AbstractAction {
-
-        SaveDeckAction() {
-            super("Save deck");
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-
-        }
-    }
-
     private class PrintDeckAction extends AbstractAction {
 
         PrintDeckAction() {
@@ -176,7 +168,6 @@ public class DeckUI extends JInternalFrame implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent event) {
-            FlashCard toRemove = new FlashCard(selectedFlashCard.getFront(), selectedFlashCard.getBack());
             String front;
             String back;
             if (isSelectedNull()) {
@@ -195,20 +186,28 @@ public class DeckUI extends JInternalFrame implements ActionListener {
                     if (back != null) {
                         FlashCard cardToAdd = new FlashCard(front, back);
                         try {
-                            deck.addFlashCard(cardToAdd);
-                            updateAddCardSelectionCombo(cardToAdd);
-                            deck.removeFlashCard(toRemove);
-                            updateRemoveCardSelectionCombo(toRemove);
+                            replaceCard(selectedFlashCard, cardToAdd);
                         } catch (DuplicateFlashCardException e) {
                             System.out.println(e.getMessage());
                         }
-                        System.out.println("Added flashcard with front: " + front + ", back: " + back + " to deck.");
                     }
                 }
             }
         }
 
+        private void replaceCard(FlashCard cardToRemove, FlashCard cardToAdd) throws DuplicateFlashCardException {
+            try {
+                deck.addFlashCard(cardToAdd);
+                updateAddCardSelectionCombo(cardToAdd);
+                deck.removeFlashCard(cardToRemove);
+                updateRemoveCardSelectionCombo(cardToRemove);
+            } catch (DuplicateFlashCardException e) {
+                throw e;
+            }
+        }
     }
+
+
 
     private class ReviewDeckAction extends AbstractAction {
 

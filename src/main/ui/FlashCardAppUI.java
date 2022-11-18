@@ -5,9 +5,9 @@
 
 package ui;
 
+import exceptions.DuplicateFlashCardException;
 import model.Deck;
 import exceptions.DuplicateDeckException;
-import model.FlashCard;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
     private JsonWriter jsonWriter;    // deck saver
     private JsonReader jsonReader;    // deck loader
     private String jsonFileLocation;  // tracks target file location
+    private Deck selectedDeck;
 
     /**
      * Constructor sets up button panel, key pad and visual alarm status window.
@@ -55,7 +57,7 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         deckSelectorCombo.addActionListener(this);
 
         setContentPane(desktop);
-        setTitle("Flash Card Application");
+        setTitle("FlashCard Application");
         setSize(WIDTH, HEIGHT);
 
         addSelectionPanel();
@@ -75,8 +77,8 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         if (e.getSource().equals(deckSelectorCombo)) {
             System.out.println(deckSelectorCombo.getSelectedItem());
             String reference = deckSelectorCombo.getSelectedItem().toString();
-            Deck d = deckSelectorReference.get(reference);
-            addDeckPanel(d);
+            selectedDeck = deckSelectorReference.get(reference);
+            addDeckPanel(selectedDeck);
         }
     }
 
@@ -101,7 +103,7 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
 
 
     // EFFECTS: sets where the saver/loader should look for a file
-    private void updateTargetFileLocation(String filename) {
+    public void updateTargetFileLocation(String filename) {
         jsonFileLocation = "./data/" + filename + ".json";
         jsonWriter.setDestination(jsonFileLocation);
         jsonReader.setSource(jsonFileLocation);
@@ -115,11 +117,13 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         JLabel selectorLabel = new JLabel("Selected Deck:");
         selectionPanel.setLayout(new GridLayout(3, 2));
 
-        selectionPanel.add(new JButton(new NewDeckAction()));
-        selectionPanel.add(new JButton(new ImportDeckAction()));
+
         selectionPanel.add(selectorLabel);
         selectionPanel.add(deckSelectorCombo);
+        selectionPanel.add(new JButton(new NewDeckAction()));
+        selectionPanel.add(new JButton(new ImportDeckAction()));
         selectionPanel.add(new JButton(new PrintDeckAction()));
+        selectionPanel.add(new JButton(new SaveDeckAction()));
 
         this.selectionPanel.add(selectionPanel, BorderLayout.WEST);
     }
@@ -132,9 +136,9 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         JMenu sensorMenu = new JMenu("File");
         sensorMenu.setMnemonic('F');
         addMenuItem(sensorMenu, new ImportDeckAction(),
+                KeyStroke.getKeyStroke("control I"));
+        addMenuItem(sensorMenu, new SaveDeckAction(),
                 KeyStroke.getKeyStroke("control S"));
-        //addMenuItem(sensorMenu, new SaveDeckAction(),
-        //        KeyStroke.getKeyStroke("control S"));
         menuBar.add(sensorMenu);
 
         setJMenuBar(menuBar);
@@ -164,11 +168,19 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
     public void addDeck(Deck d) throws DuplicateDeckException {
         for (Deck deck : deckList) {
             if (deck.getName().equals(d.getName())) {
-                throw new DuplicateDeckException("Cannot add duplicate deck");
+                throw new DuplicateDeckException("Deck of that name already exists");
             }
         }
         deckList.add(d);
         System.out.println("Added deck " + d.getName() + " for course " + d.getCourse() + " to deck list.");
+    }
+
+
+    private void displayMessageBox(String message, String title) {
+        JOptionPane.showMessageDialog(null,
+                message,
+                title,
+                JOptionPane.PLAIN_MESSAGE);
     }
 
 
@@ -204,8 +216,7 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
                         addDeck(deckToAdd);
                         deckSelectorAdd(deckToAdd);
                     } catch (DuplicateDeckException e) {
-                        JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
-                                JOptionPane.ERROR_MESSAGE);
+                        showErrorDialog(e, "Creation failed");
                     }
                 }
             }
@@ -230,35 +241,86 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
     private class ImportDeckAction extends AbstractAction {
 
         ImportDeckAction() {
-            super("Load Deck");
+            super("Import Deck");
         }
 
         @Override
         public void actionPerformed(ActionEvent evt) {
-            String course = null;
-            String name = JOptionPane.showInputDialog(null,
-                    "Enter the name of the deck to import", "Import Deck",
+            String filename = JOptionPane.showInputDialog(null,
+                    "Enter the filename of the deck to import", "Import Deck",
                     JOptionPane.QUESTION_MESSAGE);
-            if (name != null) {
-                course = JOptionPane.showInputDialog(null,
-                        "Enter the course of the deck to import", "Import Deck",
-                        JOptionPane.QUESTION_MESSAGE);
-            }
-            String filename = name + course;
-            updateTargetFileLocation(filename);
-            try {
-                Deck deckToLoad = jsonReader.read();
-                addDeck(deckToLoad);
-                deckSelectorAdd(deckToLoad);
-                System.out.println("Loaded " + deckToLoad.getName() + " from " + jsonFileLocation);
-            } catch (DuplicateDeckException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
-                        JOptionPane.ERROR_MESSAGE);
-            } catch (IOException e) {
-                System.out.println("Unable to read from file at: " + jsonFileLocation);
+            if (filename != null) {
+                updateTargetFileLocation(filename);
+                try {
+                    Deck deckToLoad = jsonReader.read();
+                    addDeck(deckToLoad);
+                    deckSelectorAdd(deckToLoad);
+                    displayMessageBox("Imported deck from" + jsonFileLocation,
+                            "Import successful");
+                } catch (DuplicateDeckException e) {
+                    showErrorDialog(e, "Import failed");
+                } catch (IOException e) {
+                    System.out.println("Unable to read from file at: " + jsonFileLocation);
+                    showErrorDialog(e, "File does not exist");
+                }
             }
         }
     }
+
+    private static void showErrorDialog(Exception e, String title) {
+        JOptionPane.showMessageDialog(null, e.getMessage(), title,
+                JOptionPane.ERROR_MESSAGE);
+    }
+
+
+    private class SaveDeckAction extends AbstractAction {
+
+        SaveDeckAction() {
+            super("Save Deck");
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent evt) {
+            String fileName = selectedDeck.getName() + selectedDeck.getCourse();
+            updateTargetFileLocation(fileName);
+            try {
+                if (isOccupiedFilepath(jsonFileLocation)) {
+                    int result = JOptionPane.showConfirmDialog(null, "File named " + fileName
+                                    + ".json already exists. Overwrite?",
+                            "Overwrite file",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE);
+                    if (result == JOptionPane.YES_OPTION) {
+                        saveDeck(selectedDeck);
+                        displayMessageBox("Saved " + fileName + ".json", "Save successful");
+                    } else if (result == JOptionPane.NO_OPTION) {
+                        // do nothing
+                    }
+                } else {
+                    saveDeck(selectedDeck);
+                    displayMessageBox("Saved " + fileName + ".json", "Save successful");
+                }
+            } catch (FileNotFoundException e) {
+                showErrorDialog(e, "Save failed");
+            }
+        }
+
+        // EFFECTS: saves deck to a file
+        private void saveDeck(Deck deck) throws FileNotFoundException {
+            jsonWriter.open();
+            jsonWriter.write(deck);
+            jsonWriter.close();
+            System.out.println("Saved deck " + deck.getName() + deck.getCourse() + " to " + jsonFileLocation);
+        }
+
+        // REQUIRES: filePath is not empty
+        // EFFECTS: returns true if file with name filePath exists, else false.
+        private boolean isOccupiedFilepath(String filePath) {
+            File file = new File(filePath);
+            return (file.exists() && !file.isDirectory());
+        }
+    }
+
 
     /**
      * Represents the action to be taken when the user wants to
