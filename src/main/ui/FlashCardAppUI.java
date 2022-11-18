@@ -51,8 +51,8 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         selectionPanel.setLayout(new BorderLayout());
         selectionPanel.setResizable(true);
 
-        deckSelectorReference = new HashMap<>();
-        createDeckSelectionCombo();
+        //createDeckSelectionCombo();
+        deckSelectorCombo = new JComboBox<>();
         deckSelectorCombo.setEditable(true);
         deckSelectorCombo.addActionListener(this);
 
@@ -63,9 +63,6 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         addSelectionPanel();
         addMenu();
 
-        Deck selectedDeck = new Deck("", "");
-        addDeckPanel(selectedDeck);
-
         selectionPanel.pack();
         selectionPanel.setVisible(true);
         desktop.add(selectionPanel);
@@ -74,6 +71,17 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         centreOnScreen();
         setVisible(true);
     }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource().equals(deckSelectorCombo)) {
+            System.out.println(deckSelectorCombo.getSelectedItem());
+            String reference = deckSelectorCombo.getSelectedItem().toString();
+            Deck d = deckSelectorReference.get(reference);
+            addDeckPanel(d);
+        }
+    }
+
 
     /**
      * Adds user interface for remote to the system.
@@ -90,6 +98,7 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         jsonWriter = new JsonWriter("");
         jsonReader = new JsonReader("");
         updateTargetFileLocation("Default"); // sets a default target file location
+        deckSelectorReference = new HashMap<>();
     }
 
 
@@ -111,21 +120,9 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         selectionPanel.add(new JButton(new NewDeckAction()));
         selectionPanel.add(new JButton(new ImportDeckAction()));
         selectionPanel.add(selectorLabel);
-        selectionPanel.add(createDeckSelectionCombo());
+        selectionPanel.add(deckSelectorCombo);
 
         this.selectionPanel.add(selectionPanel, BorderLayout.WEST);
-    }
-
-    private JComboBox<String> createDeckSelectionCombo() {
-        deckSelectorCombo = new JComboBox<String>();
-        return deckSelectorCombo;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == deckSelectorCombo) {
-            System.out.println(deckSelectorCombo.getSelectedItem());
-        }
     }
 
     /**
@@ -145,7 +142,7 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
     }
 
     private void deckSelectorAdd(Deck d) {
-        String displayName = d.getName() + ":" + d.getCourse();
+        String displayName = d.getName() + " : " + d.getCourse();
         deckSelectorReference.put(displayName, d);
         deckSelectorCombo.addItem(displayName);
     }
@@ -165,7 +162,6 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
     }
 
 
-
     public void addDeck(Deck d) throws DuplicateDeckException {
         for (Deck deck : deckList) {
             if (deck.getName().equals(d.getName())) {
@@ -175,6 +171,8 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         deckList.add(d);
         System.out.println("Added deck " + d.getName() + " for course " + d.getCourse() + " to deck list.");
     }
+
+
 
     /**
      * Represents action to be taken when user wants to add a new code
@@ -263,7 +261,6 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
             }
         }
     }
-
 
 
     /**

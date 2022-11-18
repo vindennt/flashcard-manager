@@ -5,6 +5,7 @@
 
 package persistence;
 
+import exceptions.DuplicateFlashCardException;
 import model.FlashCard;
 import model.Deck;
 import org.junit.jupiter.api.Test;
@@ -84,7 +85,7 @@ public class JsonWriterTest extends JsonTest {
             checkFlashCard(cardsInDeck.get(0), "1 + 2?", "3");
             checkFlashCard(cardsInDeck.get(1), "Worst food in the world?", "Mushrooms");
 
-        } catch (IOException e) {
+        } catch (IOException | DuplicateFlashCardException e) {
             fail("Exception should not have been thrown");
         }
     }

@@ -5,6 +5,7 @@
 
 package ui;
 
+import exceptions.DuplicateFlashCardException;
 import model.Deck;
 import model.FlashCard;
 import persistence.JsonReader;
@@ -156,7 +157,11 @@ public class FlashCardApp {
     // EFFECTS: adds flashcard with an inputted front and back to the chosen deck, regardless of duplicates
     private void doAddNewCard(Deck chosenDeck) {
         FlashCard cardToAdd = doUserCreateCard();
-        chosenDeck.addFlashCard(cardToAdd);
+        try {
+            chosenDeck.addFlashCard(cardToAdd);
+        } catch (DuplicateFlashCardException e) {
+            System.out.println(e.getMessage());
+        }
         String front = cardToAdd.getFront();
         String back = cardToAdd.getBack();
         System.out.println("Added flashcard with front: " + front + ", back: " + back + " to deck.");

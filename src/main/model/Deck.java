@@ -5,6 +5,8 @@
 
 package model;
 
+import exceptions.DuplicateDeckException;
+import exceptions.DuplicateFlashCardException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.Writable;
@@ -72,7 +74,13 @@ public class Deck implements Writable {
     // MODIFIES: this
     // EFFECTS: adds flashcard to deck
     // Note: make empty character exception
-    public void addFlashCard(FlashCard newCard) {
+    public void addFlashCard(FlashCard newCard) throws DuplicateFlashCardException {
+        for (FlashCard fc : cardsInDeck) {
+            if ((newCard.getFront().equals(fc.getFront()))
+            && (newCard.getBack().equals(fc.getBack()))) {
+                throw new DuplicateFlashCardException("Cannot add duplicate flashcards");
+            }
+        }
         cardsInDeck.add(newCard);
     }
 

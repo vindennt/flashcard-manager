@@ -5,6 +5,7 @@
 
 package persistence;
 
+import exceptions.DuplicateFlashCardException;
 import model.Deck;
 
 import java.io.File;
@@ -60,13 +61,17 @@ public class JsonReader {
         String name = jsonObject.getString("name");
         String course = jsonObject.getString("course");
         Deck d = new Deck(name, course);
-        addDeck(d, jsonObject);
+        try {
+            addDeck(d, jsonObject);
+        } catch (DuplicateFlashCardException e) {
+            System.out.println(e.getMessage());
+        }
         return d;
     }
 
     // MODIFIES: d
     // EFFECTS: parses flashcards from JSON object and adds them to deck
-    private void addDeck(Deck d, JSONObject jsonObject) {
+    private void addDeck(Deck d, JSONObject jsonObject) throws DuplicateFlashCardException {
         JSONArray jsonArray = jsonObject.getJSONArray("cardsInDeck");
         for (Object json : jsonArray) {
             JSONObject nextFlashCard = (JSONObject) json;
@@ -76,7 +81,7 @@ public class JsonReader {
 
     // MODIFIES: d
     // EFFECTS: parses flashcard from JSON object and adds it to deck
-    private void addFlashCard(Deck d, JSONObject jsonObject) {
+    private void addFlashCard(Deck d, JSONObject jsonObject) throws DuplicateFlashCardException {
         String front = jsonObject.getString("front");
         String back = jsonObject.getString("back");
         FlashCard flashCard = new FlashCard(front, back);

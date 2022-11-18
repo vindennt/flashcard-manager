@@ -1,17 +1,23 @@
 package ui;
 
 import model.Deck;
+import model.FlashCard;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.HashMap;
+import java.util.List;
 
 public class DeckUI extends JInternalFrame {
     private static final int WIDTH = 300;
     private static final int HEIGHT = 300;
     private Deck deck;
+    private List<FlashCard> cardsInDeck;
+
     private Component theParent;
     private JComboBox<String>  cardSelectorCombo;
+    private HashMap<String, Deck> cardSelectorReference;
 
     /**
      * Constructor
@@ -19,8 +25,7 @@ public class DeckUI extends JInternalFrame {
      * @param parent  the parent component
      */
     public DeckUI(Deck d, Component parent) {
-        super("Deck", false, false, false, false);
-        JPanel deckPanel = new JPanel();
+        super("Deck", true, true, false, false);
         JLabel selectorLabel = new JLabel("Selected Card:");
         deck = d;
         theParent = parent;
@@ -35,6 +40,7 @@ public class DeckUI extends JInternalFrame {
         this.add(new JButton(new ReviewDeckAction()));
         this.add(new JButton(new DeleteDeckAction()));
 
+
         setSize(WIDTH, HEIGHT);
         setPosition(parent);
         setVisible(true);
@@ -43,6 +49,16 @@ public class DeckUI extends JInternalFrame {
 
     private JComboBox<String> createCardSelectionCombo() {
         cardSelectorCombo = new JComboBox<String>();
+        updateCardSelectionCombo();
+        return cardSelectorCombo;
+    }
+
+    private JComboBox<String> updateCardSelectionCombo() {
+        cardsInDeck = deck.getCardsInDeck();
+        for (FlashCard f : cardsInDeck) {
+            String name = f.getFront() + " : " + f.getBack();
+            cardSelectorCombo.addItem(name);
+        }
         return cardSelectorCombo;
     }
 
