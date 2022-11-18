@@ -8,11 +8,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import model.Deck;
+import model.FlashCard;
 
 /**
  * Represents a screen printer for printing event log to screen.
  */
-public class DeckPrinter extends JInternalFrame {
+public class FlashCardPrinter extends JInternalFrame {
     private static final int WIDTH = 400;
     private static final int HEIGHT = 300;
     private JTextArea textArea;
@@ -21,8 +22,8 @@ public class DeckPrinter extends JInternalFrame {
      * Constructor sets up window in which log will be printed on screen
      * @param parent  the parent component
      */
-    public DeckPrinter(Component parent) {
-        super("Deck list", false, true, false, false);
+    public FlashCardPrinter(Component parent) {
+        super("FlashCard list", false, true, false, false);
         textArea = new JTextArea();
         textArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(textArea);
@@ -32,11 +33,9 @@ public class DeckPrinter extends JInternalFrame {
         setVisible(true);
     }
 
-    public void printDeck(List<Deck> lod) {
-        for (Deck d : lod) {
-            //logArea.setText(logArea.getText() + d.toString() + "\n\n");
-            textArea.setText(textArea.getText() + "Name: " + d.getName() + ", Course: " + d.getCourse()
-                    + ", FlashCards: " + d.getCardsInDeck().size() + "\n\n");
+    public void printFlashCards(List<FlashCard> lof) {
+        for (FlashCard f : lof) {
+            textArea.setText(textArea.getText() + "Front: " + f.getFront() + ", Back: " + f.getBack() + "\n\n");
         }
         repaint();
     }

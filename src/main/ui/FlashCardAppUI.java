@@ -28,11 +28,9 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
     private JComboBox<String> deckSelectorCombo;         // contains display names to access decks
     private HashMap<String, Deck> deckSelectorReference; // name reference to access actual decks
 
-    private HashMap<String, FlashCard> cardSelectorReference;
-
     private JDesktopPane desktop;
     private JInternalFrame selectionPanel;
-    private JInternalFrame deckPanel;
+
 
     private ArrayList<Deck> deckList;
 
@@ -268,7 +266,7 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
      */
     private class PrintDeckAction extends AbstractAction {
         PrintDeckAction() {
-            super("Print Deck list");
+            super("Print all decks");
         }
 
         @Override
@@ -292,6 +290,7 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         }
 
     }
+
 
     // EFFECTS: runs the application
     // throws FIleNotFoundException when trying to load a file that does not exist

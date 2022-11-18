@@ -155,12 +155,15 @@ public class DeckUI extends JInternalFrame implements ActionListener {
     private class PrintDeckAction extends AbstractAction {
 
         PrintDeckAction() {
-            super("Print deck");
+            super("Print all cards");
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-
+            FlashCardPrinter fcp;
+            fcp = new FlashCardPrinter(DeckUI.this);
+            getDesktopPane().add((FlashCardPrinter) fcp);
+            fcp.printFlashCards(cardsInDeck);
         }
     }
 
