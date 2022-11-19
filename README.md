@@ -33,7 +33,7 @@ The user stories that I wish to fulfill are:
   button on the Home Menu. You can input the name of a course to filter by so that the program will print out
   only the names of decks that are from the input course, which can help you narrow down your search
 - You can locate my visual component by looking for the deck icon to the left of the "Selected Deck" label on the
-  Home Menu
+  Home Menu, and also by looking beside "Selected Card" after selecting a deck.
 - You can save the state of my application by clicking the "Save Deck" button on the Home Menu, or by pressing ctrl + s.
   The deck is then saved under a file named as a conjunction of the deck's name and course.
 - You can reload the state of my application by selecting the "Import Deck" button on the Home Menu, or by pressing
