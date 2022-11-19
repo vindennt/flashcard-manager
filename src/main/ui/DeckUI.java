@@ -77,7 +77,7 @@ public class DeckUI extends JInternalFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(cardSelectorCombo)) {
             System.out.println(cardSelectorCombo.getSelectedItem());
-            String reference = cardSelectorCombo.getSelectedItem().toString();
+            String reference = (String) cardSelectorCombo.getSelectedItem();
             selectedFlashCard = cardSelectorReference.get(reference);
         }
     }
@@ -89,9 +89,16 @@ public class DeckUI extends JInternalFrame implements ActionListener {
     }
 
     private void updateRemoveCardSelectionCombo(FlashCard f) {
-        String name = (f.getFront() + " : " + f.getBack());
-        cardSelectorCombo.removeItem(name);
-        cardSelectorReference.remove(name, f);
+        if (cardsInDeck.size() == 1) {
+            deck.removeFlashCard(selectedFlashCard);
+            cardSelectorCombo.removeAllItems();
+        } else {
+            String name = (f.getFront() + " : " + f.getBack());
+            deck.removeFlashCard(selectedFlashCard);
+            cardSelectorCombo.removeItem(name);
+            cardSelectorReference.remove(name, f);
+            System.out.println(deck.size());
+        }
     }
 
     private class AddCardAction extends AbstractAction {
@@ -138,7 +145,6 @@ public class DeckUI extends JInternalFrame implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            deck.removeFlashCard(selectedFlashCard);
             updateRemoveCardSelectionCombo(selectedFlashCard);
         }
     }
@@ -154,6 +160,7 @@ public class DeckUI extends JInternalFrame implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             FlashCardPrinter fcp;
             fcp = new FlashCardPrinter(DeckUI.this);
+            fcp.setLocation(50, getHeight()  / 2);
             getDesktopPane().add((FlashCardPrinter) fcp);
             fcp.printFlashCards(cardsInDeck);
         }

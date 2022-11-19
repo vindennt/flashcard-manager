@@ -78,7 +78,7 @@ public class Deck implements Writable {
         for (FlashCard fc : cardsInDeck) {
             if ((newCard.getFront().equals(fc.getFront()))
             && (newCard.getBack().equals(fc.getBack()))) {
-                throw new DuplicateFlashCardException("Cannot add duplicate flashcards");
+                throw new DuplicateFlashCardException("FlashCard already exists!");
             }
         }
         cardsInDeck.add(newCard);

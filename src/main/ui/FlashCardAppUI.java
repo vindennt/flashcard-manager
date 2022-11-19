@@ -5,18 +5,19 @@
 
 package ui;
 
-import exceptions.DuplicateFlashCardException;
 import model.Deck;
 import exceptions.DuplicateDeckException;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FlashCardAppUI extends JFrame implements ActionListener {
-    private static final int WIDTH = 800;
+    private static final int WIDTH = 1000;
     private static final int HEIGHT = 600;
     private JComboBox<String> deckSelectorCombo;         // contains display names to access decks
     private HashMap<String, Deck> deckSelectorReference; // name reference to access actual decks
@@ -115,8 +116,13 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
     private void addSelectionPanel() {
         JPanel selectionPanel = new JPanel();
         JLabel selectorLabel = new JLabel("Selected Deck:");
-        selectionPanel.setLayout(new GridLayout(3, 2));
 
+        ImageIcon imageIcon =
+                new ImageIcon(new ImageIcon("data/deckIcon.png").getImage().getScaledInstance(25,
+                        25, Image.SCALE_DEFAULT));
+        selectorLabel.setIcon(imageIcon);
+
+        selectionPanel.setLayout(new GridLayout(4, 2));
 
         selectionPanel.add(selectorLabel);
         selectionPanel.add(deckSelectorCombo);
@@ -124,6 +130,7 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         selectionPanel.add(new JButton(new ImportDeckAction()));
         selectionPanel.add(new JButton(new PrintDeckAction()));
         selectionPanel.add(new JButton(new SaveDeckAction()));
+        selectionPanel.add(new JButton(new PrintFilteredDeckAction()));
 
         this.selectionPanel.add(selectionPanel, BorderLayout.WEST);
     }
@@ -336,7 +343,38 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
             DeckPrinter dp;
             dp = new DeckPrinter(FlashCardAppUI.this);
             desktop.add((DeckPrinter) dp);
+            dp.setLocation(50, getHeight()  / 2);
             dp.printDeck(deckList);
+        }
+    }
+
+    /**
+     * Represents the action to be taken when the user wants to
+     * print the event log.
+     */
+    private class PrintFilteredDeckAction extends AbstractAction {
+        PrintFilteredDeckAction() {
+            super("Print decks from course");
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent evt) {
+            DeckPrinter dp;
+            dp = new DeckPrinter(FlashCardAppUI.this);
+            desktop.add((DeckPrinter) dp);
+
+            String courseName = JOptionPane.showInputDialog(null,
+                    "Enter the course to filter by",
+                    JOptionPane.QUESTION_MESSAGE);
+            if (courseName != null) {
+                ArrayList<Deck> filteredDeckList = new ArrayList<>();
+                for (Deck d : deckList) {
+                    if (d.getCourse().equals(courseName)) {
+                        filteredDeckList.add(d);
+                    }
+                }
+                dp.printDeck(deckList);
+            }
         }
     }
 

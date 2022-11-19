@@ -1,0 +1,14 @@
+{
+    "cardsInDeck": [
+        {
+            "back": "T",
+            "front": "Pairs with A?"
+        },
+        {
+            "back": "G",
+            "front": "Pairs with C?"
+        }
+    ],
+    "name": "DNA",
+    "course": "BIOL200"
+}
