@@ -8,6 +8,8 @@ package model;
 import org.json.JSONObject;
 import persistence.Writable;
 
+import java.util.Objects;
+
 // Represents a FlashCard with a front side and back side
 public class FlashCard implements Writable {
     private String front;
@@ -41,4 +43,20 @@ public class FlashCard implements Writable {
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        FlashCard flashCard = (FlashCard) o;
+        return front.equals(flashCard.front) && back.equals(flashCard.back);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(front, back);
+    }
 }
