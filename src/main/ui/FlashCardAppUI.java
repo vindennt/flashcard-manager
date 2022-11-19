@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-// Run the flashcard application
+// Run the flashcard application with GUI
 public class FlashCardAppUI extends JFrame implements ActionListener {
     private static final int WIDTH = 1000;
     private static final int HEIGHT = 600;
@@ -30,7 +30,6 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
     private JDesktopPane desktop;
     private JInternalFrame selectionPanel;
 
-
     private ArrayList<Deck> deckList;
 
     private JsonWriter jsonWriter;    // deck saver
@@ -38,9 +37,9 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
     private String jsonFileLocation;  // tracks target file location
     private Deck selectedDeck;
 
-    /**
-     * Constructor sets up button panel, key pad and visual alarm status window.
-     */
+    // MODIFIES: this
+    // EFFECTS: handles flashcard application
+    // throws FIleNotFoundException when a filename cannot be found in the data folder
     public FlashCardAppUI() throws FileNotFoundException {
         init();
         desktop = new JDesktopPane();
@@ -49,15 +48,9 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         selectionPanel.setLayout(new BorderLayout());
         selectionPanel.setResizable(true);
 
-        //createDeckSelectionCombo();
         deckSelectorCombo = new JComboBox<>();
-        deckSelectorCombo.setEditable(true);
         deckSelectorCombo.addActionListener(this);
-
         setContentPane(desktop);
-        setTitle("FlashCard Application");
-        setSize(WIDTH, HEIGHT);
-
         addSelectionPanel();
         addMenu();
 
@@ -75,6 +68,8 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         setVisible(true);
     }
 
+    // MODIFIES: this
+    // EFFECTS: updates the selected deck when choosing it in the dropdown menu
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(deckSelectorCombo)) {
@@ -85,7 +80,8 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         }
     }
 
-
+    // MODIFIES: this
+    // EFFECTS: warns user when they want to exist the program
     public void closeHandler() {
         int confirmed = JOptionPane.showConfirmDialog(null,
                 "Any unsaved work will be lost. Are you sure you want to exit?", "Warning",
@@ -96,17 +92,18 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
     }
 
 
-    /**
-     * Adds user interface for remote to the system.
-     */
+    // MODIFIES: this
+    // EFFECTS: adds UI panel for deck selection
     private void addDeckPanel(Deck d) {
         DeckUI deckUI = new DeckUI(d, this);
         desktop.add(deckUI);
     }
 
     // MODIFIES: this
-    // EFFECTS: initializes variables and default save name and location
+    // EFFECTS: initializes variables and panel properties
     private void init() {
+        setTitle("FlashCard Application");
+        setSize(WIDTH, HEIGHT);
         deckList = new ArrayList<>();
         jsonWriter = new JsonWriter("");
         jsonReader = new JsonReader("");
@@ -122,7 +119,8 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         jsonReader.setSource(jsonFileLocation);
     }
 
-
+    // MODIFIES: this
+    // EFFECTS: adds UI panels for interacting with the deck
     private void addSelectionPanel() {
         JPanel selectionPanel = new JPanel();
         JLabel selectorLabel = new JLabel("Selected Deck:");
@@ -145,43 +143,40 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         this.selectionPanel.add(selectionPanel, BorderLayout.WEST);
     }
 
-    /**
-     * Adds menu bar.
-     */
+    // MODIFIES: this
+    // EFFECTS: adds menu bar at the top of the panel
     private void addMenu() {
         JMenuBar menuBar = new JMenuBar();
-        JMenu sensorMenu = new JMenu("File");
-        sensorMenu.setMnemonic('F');
-        addMenuItem(sensorMenu, new ImportDeckAction(),
+        JMenu selectionMenu = new JMenu("File");
+        selectionMenu.setMnemonic('F');
+        addSelectionMenuItem(selectionMenu, new ImportDeckAction(),
                 KeyStroke.getKeyStroke("control I"));
-        addMenuItem(sensorMenu, new SaveDeckAction(),
+        addSelectionMenuItem(selectionMenu, new SaveDeckAction(),
                 KeyStroke.getKeyStroke("control S"));
-        menuBar.add(sensorMenu);
+        menuBar.add(selectionMenu);
 
         setJMenuBar(menuBar);
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds the deck to the deck selection menu
     private void deckSelectorAdd(Deck d) {
         String displayName = d.getName() + " : " + d.getCourse();
         deckSelectorReference.put(displayName, d);
         deckSelectorCombo.addItem(displayName);
     }
 
-    /**
-     * Adds an item with given handler to the given menu
-     *
-     * @param theMenu     menu to which new item is added
-     * @param action      handler for new menu item
-     * @param accelerator keystroke accelerator for this menu item
-     */
-    private void addMenuItem(JMenu theMenu, AbstractAction action, KeyStroke accelerator) {
+    // MODIFIES: this
+    // EFFECTS: adds deck selection menu to the main panel
+    private void addSelectionMenuItem(JMenu theMenu, AbstractAction action, KeyStroke accelerator) {
         JMenuItem menuItem = new JMenuItem(action);
         menuItem.setMnemonic(menuItem.getText().charAt(0));
         menuItem.setAccelerator(accelerator);
         theMenu.add(menuItem);
     }
 
-
+    // MODIFIES: this
+    // EFFECTS: adds given deck to the decklist
     public void addDeck(Deck d) throws DuplicateDeckException {
         for (Deck deck : deckList) {
             if (deck.getName().equals(d.getName())) {
@@ -192,19 +187,25 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         System.out.println("Added deck " + d.getName() + " for course " + d.getCourse() + " to deck list.");
     }
 
-
-    private void displayMessageBox(String message, String title) {
+    // MODIFIES: this
+    // EFFECTS:  displays messsage box
+    private void showMessageDialog(String message, String title) {
         JOptionPane.showMessageDialog(null,
                 message,
                 title,
                 JOptionPane.PLAIN_MESSAGE);
     }
 
+    // MODIFIES: this
+    // EFFECTS: displays error message box
+    private static void showErrorDialog(Exception e, String title) {
+        JOptionPane.showMessageDialog(null, e.getMessage(), title,
+                JOptionPane.ERROR_MESSAGE);
+    }
 
-    /**
-     * Represents action to be taken when user wants to add a new code
-     * to the system.
-     */
+
+    // MODIFIES: this
+    // EFFECTS: action for when a user tries to add a new, empty deck
     private class NewDeckAction extends AbstractAction {
 
         NewDeckAction() {
@@ -242,19 +243,16 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
     }
 
 
-    /**
-     * Helper to centre main application window on desktop
-     */
+    // MODIFIES: this
+    // EFFECTS: centers items on the frame
     private void centreOnScreen() {
         int width = Toolkit.getDefaultToolkit().getScreenSize().width;
         int height = Toolkit.getDefaultToolkit().getScreenSize().height;
         setLocation((width - getWidth()) / 2, (height - getHeight()) / 2);
     }
 
-    /**
-     * Represents the action to be taken when the user wants to add a new
-     * sensor to the system.
-     */
+    // MODIFIES: this
+    // EFFECTS: action for when a user wants to import/load an existing deck file
     private class ImportDeckAction extends AbstractAction {
 
         ImportDeckAction() {
@@ -272,7 +270,7 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
                     Deck deckToLoad = jsonReader.read();
                     addDeck(deckToLoad);
                     deckSelectorAdd(deckToLoad);
-                    displayMessageBox("Imported deck from" + jsonFileLocation,
+                    showMessageDialog("Imported deck from" + jsonFileLocation,
                             "Import successful");
                 } catch (DuplicateDeckException e) {
                     showErrorDialog(e, "Import failed");
@@ -284,12 +282,10 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         }
     }
 
-    private static void showErrorDialog(Exception e, String title) {
-        JOptionPane.showMessageDialog(null, e.getMessage(), title,
-                JOptionPane.ERROR_MESSAGE);
-    }
 
 
+    // MODIFIES: this
+    // EFFECTS: action for when a user wants to save a deck from the program
     private class SaveDeckAction extends AbstractAction {
 
         SaveDeckAction() {
@@ -309,20 +305,20 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
                             JOptionPane.QUESTION_MESSAGE);
                     if (result == JOptionPane.YES_OPTION) {
                         saveDeck(selectedDeck);
-                        displayMessageBox("Saved " + fileName + ".json", "Save successful");
+                        showMessageDialog("Saved " + fileName + ".json", "Save successful");
                     } else if (result == JOptionPane.NO_OPTION) {
                         // do nothing
                     }
                 } else {
                     saveDeck(selectedDeck);
-                    displayMessageBox("Saved " + fileName + ".json", "Save successful");
+                    showMessageDialog("Saved " + fileName + ".json", "Save successful");
                 }
             } catch (FileNotFoundException e) {
                 showErrorDialog(e, "Save failed");
             }
         }
 
-        // EFFECTS: saves deck to a file
+        // EFFECTS: saves selected deck to data directory
         private void saveDeck(Deck deck) throws FileNotFoundException {
             jsonWriter.open();
             jsonWriter.write(deck);
@@ -339,10 +335,8 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
     }
 
 
-    /**
-     * Represents the action to be taken when the user wants to
-     * print the event log.
-     */
+
+    // EFFECTS: action for when user wants to print out all their decks
     private class PrintDeckAction extends AbstractAction {
         PrintDeckAction() {
             super("Print all decks");
@@ -358,10 +352,8 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         }
     }
 
-    /**
-     * Represents the action to be taken when the user wants to
-     * print the event log.
-     */
+
+    // EFFECTS: action for when a user wants to print out decks from a specified course
     private class PrintFilteredDeckAction extends AbstractAction {
         PrintFilteredDeckAction() {
             super("Print decks from course");
@@ -389,10 +381,9 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
     }
 
 
-    /**
-     * Represents action to be taken when user clicks desktop
-     * to switch focus. (Needed for key handling.)
-     */
+
+
+    // EFFECTS: requests focus when the window is clicked
     private class DesktopFocusAction extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
