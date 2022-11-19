@@ -110,9 +110,7 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         jsonReader.setSource(jsonFileLocation);
     }
 
-    /**
-     * Helper to add control buttons.
-     */
+
     private void addSelectionPanel() {
         JPanel selectionPanel = new JPanel();
         JLabel selectorLabel = new JLabel("Selected Deck:");
