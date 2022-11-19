@@ -1,4 +1,4 @@
-// Reference: AlarmSystem
+// References: AlarmSystem
 // Git: https://github.students.cs.ubc.ca/CPSC210/AlarmSystem.git
 // Author: Paul Carter
 // Contribution: Adapted to work for FlashCardApp methods
@@ -354,10 +354,6 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent evt) {
-            DeckPrinter dp;
-            dp = new DeckPrinter(FlashCardAppUI.this);
-            desktop.add((DeckPrinter) dp);
-
             String courseName = JOptionPane.showInputDialog(null,
                     "Enter the course to filter by",
                     JOptionPane.QUESTION_MESSAGE);
@@ -368,6 +364,9 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
                         filteredDeckList.add(d);
                     }
                 }
+                DeckPrinter dp;
+                dp = new DeckPrinter(FlashCardAppUI.this);
+                desktop.add((DeckPrinter) dp);
                 dp.printDeck(deckList);
             }
         }
