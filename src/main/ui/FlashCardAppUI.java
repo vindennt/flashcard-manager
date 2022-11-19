@@ -44,7 +44,8 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         init();
         desktop = new JDesktopPane();
         desktop.addMouseListener(new DesktopFocusAction());
-        selectionPanel = new JInternalFrame("Home Menu", false, false, false, false);
+        selectionPanel = new JInternalFrame("Home Menu", false, false,
+                false, false);
         selectionPanel.setLayout(new BorderLayout());
         selectionPanel.setResizable(true);
 
@@ -217,15 +218,11 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
             String name;
             String course;
 
-            name = JOptionPane.showInputDialog(null,
-                    "Deck name: ",
-                    "Deck creation",
+            name = JOptionPane.showInputDialog(null, "Deck name: ", "Deck creation",
                     JOptionPane.QUESTION_MESSAGE);
 
             if (name != null) {
-                course = JOptionPane.showInputDialog(null,
-                        "Deck course: ",
-                        "Deck creation",
+                course = JOptionPane.showInputDialog(null, "Deck course: ", "Deck creation",
                         JOptionPane.QUESTION_MESSAGE);
 
                 if (course != null) {
@@ -283,7 +280,6 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
     }
 
 
-
     // MODIFIES: this
     // EFFECTS: action for when a user wants to save a deck from the program
     private class SaveDeckAction extends AbstractAction {
@@ -299,10 +295,8 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
             try {
                 if (isOccupiedFilepath(jsonFileLocation)) {
                     int result = JOptionPane.showConfirmDialog(null, "File named " + fileName
-                                    + ".json already exists. Overwrite?",
-                            "Overwrite file",
-                            JOptionPane.YES_NO_OPTION,
-                            JOptionPane.QUESTION_MESSAGE);
+                                    + ".json already exists. Overwrite?", "Overwrite file",
+                            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                     if (result == JOptionPane.YES_OPTION) {
                         saveDeck(selectedDeck);
                         showMessageDialog("Saved " + fileName + ".json", "Save successful");
@@ -335,7 +329,6 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
     }
 
 
-
     // EFFECTS: action for when user wants to print out all their decks
     private class PrintDeckAction extends AbstractAction {
         PrintDeckAction() {
@@ -347,7 +340,7 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
             DeckPrinter dp;
             dp = new DeckPrinter(FlashCardAppUI.this);
             desktop.add((DeckPrinter) dp);
-            dp.setLocation(50, getHeight()  / 2);
+            dp.setLocation(50, getHeight() / 2);
             dp.printDeck(deckList);
         }
     }
@@ -379,8 +372,6 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
             }
         }
     }
-
-
 
 
     // EFFECTS: requests focus when the window is clicked

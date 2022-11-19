@@ -19,7 +19,8 @@ public class DeckPrinter extends JInternalFrame {
 
     /**
      * Constructor sets up window in which log will be printed on screen
-     * @param parent  the parent component
+     *
+     * @param parent the parent component
      */
     public DeckPrinter(Component parent) {
         super("Deck list", false, true, false, false);
@@ -44,7 +45,8 @@ public class DeckPrinter extends JInternalFrame {
     /**
      * Sets the position of window in which log will be printed relative to
      * parent
-     * @param parent  the parent component
+     *
+     * @param parent the parent component
      */
     private void setPosition(Component parent) {
         setLocation(parent.getWidth() - getWidth() - 20,
