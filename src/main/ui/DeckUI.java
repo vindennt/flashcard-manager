@@ -13,7 +13,8 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.List;
 
-public class DeckUI extends JInternalFrame implements ActionListener {
+// Deck UI for interacting with the flashcards in a deck
+public class DeckUI extends JInternalFrame implements ActionListener, MessageHandler {
     private static final int WIDTH = 500;
     private static final int HEIGHT = 300;
     private Deck deck;
@@ -28,14 +29,8 @@ public class DeckUI extends JInternalFrame implements ActionListener {
     private JsonReader jsonReader;    // deck loader
     private String jsonFileLocation;  // tracks target file location
 
-    /**
-     * Constructor
-     *
-     * @param d      the deck
-     * @param parent the parent component
-     */
     public DeckUI(Deck d, Component parent) {
-        super("Deck", true, true, false, false);
+        super("Deck: " + d.getName(), true, true, false, false);
         JLabel selectorLabel = new JLabel("Selected Card:");
         deck = d;
         theParent = parent;
@@ -56,7 +51,7 @@ public class DeckUI extends JInternalFrame implements ActionListener {
         setVisible(true);
     }
 
-
+    // EFFECTS: creates the dropdown menu for all flashcards
     private JComboBox<String> createCardSelectionCombo() {
         cardSelectorCombo = new JComboBox<String>();
         cardSelectorCombo.setEditable(true);
@@ -69,6 +64,8 @@ public class DeckUI extends JInternalFrame implements ActionListener {
         return cardSelectorCombo;
     }
 
+    // MODIFIES: this
+    // EFFECTS: tracks actions on the dropdown menu and stores the currently selected flashcard
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(cardSelectorCombo)) {
@@ -78,12 +75,16 @@ public class DeckUI extends JInternalFrame implements ActionListener {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: updates the dropdown menu and flashcard hashmap when adding cards
     private void updateAddCardSelectionCombo(FlashCard f) {
         String name = f.getFront() + " : " + f.getBack();
         cardSelectorCombo.addItem(name);
         cardSelectorReference.put(name, f);
     }
 
+    // MODIFIES: this
+    // EFFECTS: updates the dropdown menu and flashcard hashmap when removing cards
     private void updateRemoveCardSelectionCombo(FlashCard f) {
         if (cardsInDeck.size() == 1) {
             deck.removeFlashCard(selectedFlashCard);
@@ -97,6 +98,24 @@ public class DeckUI extends JInternalFrame implements ActionListener {
         }
     }
 
+
+    // MODIFIES: this
+    // EFFECTS:  displays messsage box
+    public void showMessageDialog(String message, String title) {
+        JOptionPane.showMessageDialog(null,
+                message,
+                title,
+                JOptionPane.PLAIN_MESSAGE);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: displays error message box
+    public void showErrorDialog(Exception e, String title) {
+        JOptionPane.showMessageDialog(null, e.getMessage(), title,
+                JOptionPane.ERROR_MESSAGE);
+    }
+
+
     private class AddCardAction extends AbstractAction {
 
         AddCardAction() {
@@ -104,6 +123,9 @@ public class DeckUI extends JInternalFrame implements ActionListener {
         }
 
         @Override
+        // MODIFIES: this
+        // EFFECTS: prompts user to create a flashcard.
+        // throws DuplicateFlashCardException when trying to create a flashcard that already exists
         public void actionPerformed(ActionEvent event) {
             String front;
             String back;
@@ -139,6 +161,8 @@ public class DeckUI extends JInternalFrame implements ActionListener {
             super("Remove card");
         }
 
+        // MODIFIES: this
+        // EFFECTS: removes the selected flashcard from the deck
         @Override
         public void actionPerformed(ActionEvent e) {
             updateRemoveCardSelectionCombo(selectedFlashCard);
@@ -152,6 +176,8 @@ public class DeckUI extends JInternalFrame implements ActionListener {
             super("Print all cards");
         }
 
+
+        // EFFECTS: prints out all the flashcards in the selected deck.
         @Override
         public void actionPerformed(ActionEvent e) {
             FlashCardPrinter fcp;
@@ -170,6 +196,8 @@ public class DeckUI extends JInternalFrame implements ActionListener {
         }
 
         @Override
+        // MODIFIES: this
+        // EFFECTS: prompts user to input new text for their selected flashcard
         public void actionPerformed(ActionEvent event) {
             String front;
             String back;
@@ -194,6 +222,8 @@ public class DeckUI extends JInternalFrame implements ActionListener {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: replaces selected flashcard with new edited version
     private void replaceCard(FlashCard cardToRemove, FlashCard cardToAdd) throws DuplicateFlashCardException {
         try {
             deck.addFlashCard(cardToAdd);
@@ -212,19 +242,17 @@ public class DeckUI extends JInternalFrame implements ActionListener {
             super("Review");
         }
 
+        // EFFECTS: Displays the flashcards in quiz style for the user to answer.
         @Override
         public void actionPerformed(ActionEvent e) {
-
+            showMessageDialog("Under construction :)", "Sorry");
         }
 
     }
 
 
-    /**
-     * Sets the position of this remote control UI relative to parent component
-     *
-     * @param parent the parent component
-     */
+    // MODIFIES: this
+    // EFFECTS: sets position of the deckUI relative to the parent frame
     private void setPosition(Component parent) {
         setLocation(parent.getWidth() - getWidth(), 0);
     }

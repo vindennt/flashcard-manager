@@ -21,31 +21,22 @@ The user stories that I wish to fulfill are:
 
 - As a user, I want to be able to save a deck to a file
 - As a user, I want to be able to load a deck from a file
+ 
+# Instructions for Grader
 
-## To do:
-### P3: Graphical user interface
-
-- [] Include a panel in which all the flashcards that have already been added to a deck are displayed. 
-  - Additionally, include 2 related events such as a button to add flashcard to deck, or a filter button. Just make sure its related to flashcards and decks.
-- [] Buttons to click for saving and loading, or a pop-up save reminder
-- [] Visual component, such as displaying an image when an event occurs, displaying an image in a splash screen when your  application starts, or displaying a graph to represent some aspect of the user's data
-  - Painting panels, buttons and menu items in different colours does not count
-- [] Documentation requirements
-
-### Instructions for Grader
-List step by step instructions for interacting with the GUI
-- how to generate the first of the two required events that are related to the required user story "add multiple Xs to a Y" (e.g., click the button labelled "Add an X", or select the menu item labelled "Add an X", or type <ctrl>+N on the keyboard to add an X,...)
-- how to generated the second of the two required events
-- where to find the visual component that was added to your project (e.g., background image, image added to button)
-- how does the user save the state of the application to file
-- how does the user load the state of the application from file  
-
-Use template below:
-
-- You can generate the first required event related to adding Xs to a Y by...
-- You can generate the second required event related to adding Xs to a Y by...
-- You can locate my visual component by...
-- You can save the state of my application by...
-- You can reload the state of my application by...
+- You can generate the first required event related to adding Xs to a Y by clicking the "Create Deck" button on the
+  Home menu. Enter a deck name and course when prompted. Then, from the dropdown
+  menu to the right of "Selected Deck", selected the deck you just create. Then, a new window on the right will appear
+  where you can add FlashCards to a Deck.
+- You can generate the second required event related to adding Xs to a Y by clicking the "Print decks from course"
+  button on the Home Menu. You can input the name of a course to filter by so that the program will print out
+  only the names of decks that are from the input course, which can help you narrow down your search
+- You can locate my visual component by looking for the deck icon to the left of the "Selected Deck" label on the
+  Home Menu
+- You can save the state of my application by clicking the "Save Deck" button on the Home Menu. The deck is
+  then saved under a file named as a conjunction of the deck's name and course.
+- You can reload the state of my application by selecting the "Import Deck" button on the Home Menu. Then, they can
+  input the filename of the .json file, such as "DNABIOL200," which already exists in this project as one of the sample
+  files. 
 
 

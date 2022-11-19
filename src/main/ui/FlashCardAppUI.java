@@ -190,7 +190,7 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
 
     // MODIFIES: this
     // EFFECTS:  displays messsage box
-    private void showMessageDialog(String message, String title) {
+    public void showMessageDialog(String message, String title) {
         JOptionPane.showMessageDialog(null,
                 message,
                 title,
@@ -199,7 +199,7 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
 
     // MODIFIES: this
     // EFFECTS: displays error message box
-    private static void showErrorDialog(Exception e, String title) {
+    public void showErrorDialog(Exception e, String title) {
         JOptionPane.showMessageDialog(null, e.getMessage(), title,
                 JOptionPane.ERROR_MESSAGE);
     }
@@ -259,7 +259,7 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent evt) {
             String filename = JOptionPane.showInputDialog(null,
-                    "Enter the filename of the deck to import", "Import Deck",
+                    "Enter the filename of the .json deck to import.", "Import Deck",
                     JOptionPane.QUESTION_MESSAGE);
             if (filename != null) {
                 updateTargetFileLocation(filename);
