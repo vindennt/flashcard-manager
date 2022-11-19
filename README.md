@@ -28,6 +28,7 @@ The user stories that I wish to fulfill are:
   Home menu. Enter a deck name and course when prompted. Then, from the dropdown
   menu to the right of "Selected Deck", selected the deck you just create. Then, a new window on the right will appear
   where you can add FlashCards to a Deck.
+  - Note: To properly select a Deck or FlashCard, make sure to click on it from the dropdown menu
 - You can generate the second required event related to adding Xs to a Y by clicking the "Print decks from course"
   button on the Home Menu. You can input the name of a course to filter by so that the program will print out
   only the names of decks that are from the input course, which can help you narrow down your search

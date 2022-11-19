@@ -32,6 +32,12 @@ public class DeckUI extends JInternalFrame implements ActionListener, MessageHan
     public DeckUI(Deck d, Component parent) {
         super("Deck: " + d.getName(), true, true, false, false);
         JLabel selectorLabel = new JLabel("Selected Card:");
+
+        ImageIcon imageIcon =
+                new ImageIcon(new ImageIcon("data/cardIcon.png").getImage().getScaledInstance(25,
+                        25, Image.SCALE_DEFAULT));
+        selectorLabel.setIcon(imageIcon);
+
         deck = d;
         theParent = parent;
         this.setLayout(new GridLayout(4, 2));
@@ -57,10 +63,7 @@ public class DeckUI extends JInternalFrame implements ActionListener, MessageHan
         cardSelectorCombo.setEditable(true);
         cardSelectorCombo.addActionListener(this);
 
-        cardsInDeck = deck.getCardsInDeck();
-        for (FlashCard f : cardsInDeck) {
-            updateAddCardSelectionCombo(f);
-        }
+        updateCardSelectionAndReference();
         return cardSelectorCombo;
     }
 
@@ -76,6 +79,15 @@ public class DeckUI extends JInternalFrame implements ActionListener, MessageHan
     }
 
     // MODIFIES: this
+    // EFFECTS: updates card selection dropdown and the hashmap reference
+    private void updateCardSelectionAndReference() {
+        cardsInDeck = deck.getCardsInDeck();
+        for (FlashCard f : cardsInDeck) {
+            updateAddCardSelectionCombo(f);
+        }
+    }
+
+    // MODIFIES: this
     // EFFECTS: updates the dropdown menu and flashcard hashmap when adding cards
     private void updateAddCardSelectionCombo(FlashCard f) {
         String name = f.getFront() + " : " + f.getBack();
@@ -86,18 +98,11 @@ public class DeckUI extends JInternalFrame implements ActionListener, MessageHan
     // MODIFIES: this
     // EFFECTS: updates the dropdown menu and flashcard hashmap when removing cards
     private void updateRemoveCardSelectionCombo(FlashCard f) {
-        if (cardsInDeck.size() == 1) {
-            deck.removeFlashCard(selectedFlashCard);
-            cardSelectorCombo.removeAllItems();
-        } else {
-            String name = (f.getFront() + " : " + f.getBack());
-            deck.removeFlashCard(selectedFlashCard);
-            cardSelectorCombo.removeItem(name);
-            cardSelectorReference.remove(name, f);
-            System.out.println(deck.size());
-        }
+        deck.removeFlashCard(selectedFlashCard);
+        cardSelectorCombo.removeAllItems();
+        cardSelectorReference = new HashMap<>();
+        updateCardSelectionAndReference();
     }
-
 
     // MODIFIES: this
     // EFFECTS:  displays messsage box
@@ -197,7 +202,8 @@ public class DeckUI extends JInternalFrame implements ActionListener, MessageHan
 
         @Override
         // MODIFIES: this
-        // EFFECTS: prompts user to input new text for their selected flashcard
+        // EFFECTS: prompts user to input new text for their selected flashcard. If there is no card selected,
+        // then the edit function will attempt to create the input card.
         public void actionPerformed(ActionEvent event) {
             String front;
             String back;
