@@ -1,6 +1,7 @@
 package model;
 
 
+import exceptions.DuplicateFlashCardException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,18 +17,41 @@ import static org.junit.jupiter.api.Assertions.*;
 public class DeckTest {
 
     Deck testDeck;
+    Deck emptyDeck;
     String TEST_NAME = "test";
     String TEST_COURSE = "CPSC210";
 
     FlashCard testCard;
     String TEST_FRONT = "Front";
     String TEST_BACK = "Back";
+    FlashCard differentCard;
 
 
     @BeforeEach
     public void setup() {
+        emptyDeck = new Deck("emptyName", "emptyCourse");
         testDeck = new Deck(TEST_NAME, TEST_COURSE);
         testCard = new FlashCard(TEST_FRONT, TEST_BACK);
+        differentCard = new FlashCard("second", "card");
+
+        try {
+            testDeck.addFlashCard(testCard);
+        } catch (DuplicateFlashCardException e) {
+            fail("Unexpected DuplicateFlashCardException");
+        }
+    }
+
+    @Test
+    public void testGetBack() {
+        String testBack = testCard.getBack();
+        assertEquals(TEST_BACK, testBack);
+    }
+
+    @Test
+    public void testToJson() {
+        JSONObject expectedJson = new JSONObject();
+        expectedJson.put("front", TEST_FRONT);
+        expectedJson.put("back", TEST_BACK);
     }
 
     @Test
@@ -56,49 +80,51 @@ public class DeckTest {
 
     @Test
     public void testSize() {
-        assertEquals(0, testDeck.size());
+        assertEquals(1, testDeck.size());
     }
 
     @Test
     public void testContains() {
-        testDeck.addFlashCard(testCard);
         assertTrue(testDeck.contains(testCard));
     }
 
     @Test
     public void testAddOneFlashCard() {
-        assertEquals(0, testDeck.size());
-        testDeck.addFlashCard(testCard);
-        assertTrue(testDeck.contains(testCard));
-        assertEquals(1, testDeck.size());
+
+        try {
+            emptyDeck.addFlashCard(testCard);
+        } catch (DuplicateFlashCardException e) {
+            fail("unexpected DuplicateFlashCardException");
+        }
+        assertEquals(1, emptyDeck.size());
+        assertTrue(emptyDeck.contains(testCard));
     }
 
     @Test
     public void testAddTwoSameFlashCards() {
-        testDeck.addFlashCard(testCard);
-        assertTrue(testDeck.contains(testCard));
+        try {
+            testDeck.addFlashCard(testCard);
+            fail("should throw duplicateCardException");
+        } catch (DuplicateFlashCardException e) {
+            // pass, expected
+        }
         assertEquals(1, testDeck.size());
-        testDeck.addFlashCard(testCard);
-        assertTrue(testDeck.contains(testCard));
-        assertEquals(2, testDeck.size());
     }
 
     @Test
     public void testAddTwoDifferentFlashCards() {
-        testDeck.addFlashCard(testCard);
-        assertTrue(testDeck.contains(testCard));
-        assertEquals(1, testDeck.size());
         FlashCard differentCard = new FlashCard("second", "card");
-        testDeck.addFlashCard(differentCard);
+        try {
+            testDeck.addFlashCard(differentCard);
+        } catch (DuplicateFlashCardException e) {
+            fail("unexpected DuplicateFlashCardException");
+        }
         assertTrue(testDeck.contains(differentCard));
         assertEquals(2, testDeck.size());
     }
 
     @Test
     public void testRemoveFlashCard() {
-        testDeck.addFlashCard(testCard);
-        assertTrue(testDeck.contains(testCard));
-        assertEquals(1, testDeck.size());
         testDeck.removeFlashCard(testCard);
         assertFalse(testDeck.contains(testCard));
         assertEquals(0, testDeck.size());
@@ -106,36 +132,15 @@ public class DeckTest {
 
     @Test
     public void testSetCard() {
-        testDeck.addFlashCard(testCard);
-        assertTrue(testDeck.contains(testCard));
-        FlashCard differentCard = new FlashCard("second", "card");
+
         testDeck.setFlashCard(0, differentCard);
         assertFalse(testDeck.contains(testCard));
         assertTrue(testDeck.contains(differentCard));
 
-    }
-
-    @Test
-    public void testTripleSetCard() {
-        testDeck.addFlashCard(testCard);
-        testDeck.addFlashCard(testCard);
-        testDeck.addFlashCard(testCard);
-        assertTrue(testDeck.contains(testCard));
-        FlashCard differentCard = new FlashCard("second", "card");
-        testDeck.setFlashCard(2, differentCard);
-        assertTrue(testDeck.contains(differentCard));
-        testDeck.setFlashCard(0, differentCard);
-        testDeck.setFlashCard(1, differentCard);
-        assertFalse(testDeck.contains(testCard));
-        testDeck.setFlashCard(1, testCard);
-        assertTrue(testDeck.contains(testCard));
     }
 
     @Test
     public void testSetCardUnderZero() {
-        testDeck.addFlashCard(testCard);
-        assertTrue(testDeck.contains(testCard));
-        FlashCard differentCard = new FlashCard("second", "card");
         testDeck.setFlashCard(-1, differentCard);
         assertTrue(testDeck.contains(testCard));
         assertFalse(testDeck.contains(differentCard));
@@ -143,60 +148,79 @@ public class DeckTest {
 
     @Test
     public void testSetCardSameDeckSize() {
-        testDeck.addFlashCard(testCard);
-        assertTrue(testDeck.contains(testCard));
-        FlashCard differentCard = new FlashCard("second", "card");
-        testDeck.setFlashCard(2, differentCard);
+        testDeck.setFlashCard(1, differentCard);
         assertTrue(testDeck.contains(testCard));
         assertFalse(testDeck.contains(differentCard));
     }
 
     @Test
     public void testSetCardOverDeckSize() {
-        testDeck.addFlashCard(testCard);
-        assertTrue(testDeck.contains(testCard));
-        FlashCard differentCard = new FlashCard("second", "card");
-        testDeck.setFlashCard(3, differentCard);
+        testDeck.setFlashCard(2, differentCard);
         assertTrue(testDeck.contains(testCard));
         assertFalse(testDeck.contains(differentCard));
     }
 
     @Test
     public void testGetOnce() {
-        testDeck.addFlashCard(testCard);
         assertEquals(testCard, testDeck.get(0));
     }
 
     @Test
     public void testGetTwice() {
-        testDeck.addFlashCard(testCard);
         assertEquals(testCard, testDeck.get(0));
         FlashCard testcard_2 = new FlashCard("front_2", "back_2");
-        testDeck.addFlashCard(testcard_2);
+        try {
+            testDeck.addFlashCard(testcard_2);
+        } catch (DuplicateFlashCardException e) {
+            fail("unexpected DuplicateFlashCardException");
+        }
         assertEquals(testcard_2, testDeck.get(1));
     }
 
     @Test
     public void testGetCardsInEmptyDeck() {
         List<FlashCard> empty = new ArrayList<>();
-        assertEquals(empty, testDeck.getCardsInDeck());
+        assertEquals(empty, emptyDeck.getCardsInDeck());
     }
 
     @Test
     public void testGetCardsInDeck() {
         List<FlashCard> testList = new ArrayList<>();
         testList.add(testCard);
-        testDeck.addFlashCard(testCard);
         assertEquals(testList, testDeck.getCardsInDeck());
+    }
+
+    @Test
+    public void testEqualDeckNames() {
+        Deck equalDeck = new Deck("test", "CPSC310");
+        assertTrue(testDeck.equals(equalDeck));
+    }
+
+    @Test
+    public void testNotEqualDecks() {
+        assertFalse(testDeck.equals(emptyDeck));
+    }
+
+    @Test
+    public void testEqualDeckListNotName() {
+        try {
+            emptyDeck.addFlashCard(testCard);
+        } catch (DuplicateFlashCardException e) {
+            fail("unexpected DuplicateFlashCardException");
+        }
+        assertFalse(testDeck.equals(emptyDeck));
     }
 
     @Test
     public void testGetMultipleCardsInDeck() {
         List<FlashCard> testList = new ArrayList<>();
         testList.add(testCard);
-        testList.add(testCard);
-        testDeck.addFlashCard(testCard);
-        testDeck.addFlashCard(testCard);
+        testList.add(differentCard);
+        try {
+            testDeck.addFlashCard(differentCard);
+        } catch (DuplicateFlashCardException e) {
+            fail("unexpected DuplicateFlashCardException");
+        }
         assertEquals(testList, testDeck.getCardsInDeck());
     }
 

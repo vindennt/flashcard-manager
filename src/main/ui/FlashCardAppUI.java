@@ -10,20 +10,17 @@ import exceptions.DuplicateDeckException;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
-import javax.imageio.ImageIO;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
+import java.awt.event.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+// Run the flashcard application
 public class FlashCardAppUI extends JFrame implements ActionListener {
     private static final int WIDTH = 1000;
     private static final int HEIGHT = 600;
@@ -68,7 +65,12 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         selectionPanel.setVisible(true);
         desktop.add(selectionPanel);
 
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                closeHandler();
+            }
+        });
         centreOnScreen();
         setVisible(true);
     }
@@ -80,6 +82,16 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
             String reference = deckSelectorCombo.getSelectedItem().toString();
             selectedDeck = deckSelectorReference.get(reference);
             addDeckPanel(selectedDeck);
+        }
+    }
+
+
+    public void closeHandler() {
+        int confirmed = JOptionPane.showConfirmDialog(null,
+                "Any unsaved work will be lost. Are you sure you want to exit?", "Warning",
+                JOptionPane.YES_NO_OPTION);
+        if (confirmed == JOptionPane.YES_OPTION) {
+            dispose();
         }
     }
 
