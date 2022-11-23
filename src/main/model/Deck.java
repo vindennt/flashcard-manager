@@ -76,8 +76,9 @@ public class Deck implements Writable {
     // Note: make empty character exception
     public void addFlashCard(FlashCard newCard) throws DuplicateFlashCardException {
         for (FlashCard fc : cardsInDeck) {
-            if ((newCard.getFront().equals(fc.getFront())) && (newCard.getBack().equals(fc.getBack()))) {
-                throw new DuplicateFlashCardException("Flashcard already exists");
+            if ((newCard.getFront().equals(fc.getFront()))
+            && (newCard.getBack().equals(fc.getBack()))) {
+                throw new DuplicateFlashCardException("Cannot add duplicate flashcards");
             }
         }
         cardsInDeck.add(newCard);
@@ -128,12 +129,8 @@ public class Deck implements Writable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Deck deck = (Deck) o;
         return name.equals(deck.name);
     }

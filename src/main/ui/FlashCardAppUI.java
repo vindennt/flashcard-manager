@@ -5,6 +5,7 @@
 
 package ui;
 
+import exceptions.DuplicateFlashCardException;
 import model.Deck;
 import exceptions.DuplicateDeckException;
 import persistence.JsonReader;
@@ -22,9 +23,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FlashCardAppUI extends JFrame implements ActionListener, MessageHandler {
-    private static final int WIDTH = 1155;
-    private static final int HEIGHT = 650;
+public class FlashCardAppUI extends JFrame implements ActionListener {
+    private static final int WIDTH = 800;
+    private static final int HEIGHT = 600;
     private JComboBox<String> deckSelectorCombo;         // contains display names to access decks
     private HashMap<String, Deck> deckSelectorReference; // name reference to access actual decks
 
@@ -115,7 +116,6 @@ public class FlashCardAppUI extends JFrame implements ActionListener, MessageHan
         JPanel selectionPanel = new JPanel();
         JLabel selectorLabel = new JLabel("Selected Deck:");
         selectionPanel.setLayout(new GridLayout(3, 2));
-        selectionPanel.setSize(400, 50);
 
 
         selectionPanel.add(selectorLabel);
@@ -132,18 +132,16 @@ public class FlashCardAppUI extends JFrame implements ActionListener, MessageHan
      * Adds menu bar.
      */
     private void addMenu() {
-        JMenuBar fileMenuBar = new JMenuBar();
-        JMenu fileMenu = new JMenu("File");
-        addMenuItem(fileMenu, new ImportDeckAction(),
-                KeyStroke.getKeyStroke("control O"));
-        addMenuItem(fileMenu, new SaveDeckAction(),
+        JMenuBar menuBar = new JMenuBar();
+        JMenu sensorMenu = new JMenu("File");
+        sensorMenu.setMnemonic('F');
+        addMenuItem(sensorMenu, new ImportDeckAction(),
+                KeyStroke.getKeyStroke("control I"));
+        addMenuItem(sensorMenu, new SaveDeckAction(),
                 KeyStroke.getKeyStroke("control S"));
-        addMenuItem(fileMenu, new NewDeckAction(),
-                KeyStroke.getKeyStroke("control N"));
-        addMenuItem(fileMenu, new PrintDeckAction(),
-                KeyStroke.getKeyStroke("control P"));
-        fileMenuBar.add(fileMenu);
-        setJMenuBar(fileMenuBar);
+        menuBar.add(sensorMenu);
+
+        setJMenuBar(menuBar);
     }
 
     private void deckSelectorAdd(Deck d) {
@@ -178,16 +176,11 @@ public class FlashCardAppUI extends JFrame implements ActionListener, MessageHan
     }
 
 
-    public void showMessageDialog(String message, String title) {
+    private void displayMessageBox(String message, String title) {
         JOptionPane.showMessageDialog(null,
                 message,
                 title,
                 JOptionPane.PLAIN_MESSAGE);
-    }
-
-    public void showErrorDialog(Exception e, String title) {
-        JOptionPane.showMessageDialog(null, e.getMessage(), title,
-                JOptionPane.ERROR_MESSAGE);
     }
 
 
@@ -198,7 +191,7 @@ public class FlashCardAppUI extends JFrame implements ActionListener, MessageHan
     private class NewDeckAction extends AbstractAction {
 
         NewDeckAction() {
-            super("New Deck");
+            super("Create Deck");
         }
 
         @Override
@@ -228,6 +221,7 @@ public class FlashCardAppUI extends JFrame implements ActionListener, MessageHan
                 }
             }
         }
+
     }
 
 
@@ -261,8 +255,7 @@ public class FlashCardAppUI extends JFrame implements ActionListener, MessageHan
                     Deck deckToLoad = jsonReader.read();
                     addDeck(deckToLoad);
                     deckSelectorAdd(deckToLoad);
-                    addDeckPanel(deckToLoad);
-                    showMessageDialog("Imported deck from" + jsonFileLocation,
+                    displayMessageBox("Imported deck from" + jsonFileLocation,
                             "Import successful");
                 } catch (DuplicateDeckException e) {
                     showErrorDialog(e, "Import failed");
@@ -274,6 +267,10 @@ public class FlashCardAppUI extends JFrame implements ActionListener, MessageHan
         }
     }
 
+    private static void showErrorDialog(Exception e, String title) {
+        JOptionPane.showMessageDialog(null, e.getMessage(), title,
+                JOptionPane.ERROR_MESSAGE);
+    }
 
 
     private class SaveDeckAction extends AbstractAction {
@@ -295,13 +292,13 @@ public class FlashCardAppUI extends JFrame implements ActionListener, MessageHan
                             JOptionPane.QUESTION_MESSAGE);
                     if (result == JOptionPane.YES_OPTION) {
                         saveDeck(selectedDeck);
-                        showMessageDialog("Saved " + fileName + ".json", "Save successful");
+                        displayMessageBox("Saved " + fileName + ".json", "Save successful");
                     } else if (result == JOptionPane.NO_OPTION) {
                         // do nothing
                     }
                 } else {
                     saveDeck(selectedDeck);
-                    showMessageDialog("Saved " + fileName + ".json", "Save successful");
+                    displayMessageBox("Saved " + fileName + ".json", "Save successful");
                 }
             } catch (FileNotFoundException e) {
                 showErrorDialog(e, "Save failed");
@@ -338,7 +335,6 @@ public class FlashCardAppUI extends JFrame implements ActionListener, MessageHan
         public void actionPerformed(ActionEvent evt) {
             DeckPrinter dp;
             dp = new DeckPrinter(FlashCardAppUI.this);
-            dp.setLocation(50, getHeight() / 3);
             desktop.add((DeckPrinter) dp);
             dp.printDeck(deckList);
         }
