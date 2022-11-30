@@ -115,12 +115,13 @@ public class DeckUI extends JInternalFrame implements ActionListener, MessageHan
 
     // MODIFIES: this
     // EFFECTS: displays error message box
+    @Override
     public void showErrorDialog(Exception e, String title) {
         JOptionPane.showMessageDialog(null, e.getMessage(), title,
                 JOptionPane.ERROR_MESSAGE);
     }
 
-
+    // Represents an action to add a card to a deck
     private class AddCardAction extends AbstractAction {
 
         AddCardAction() {
@@ -160,6 +161,7 @@ public class DeckUI extends JInternalFrame implements ActionListener, MessageHan
         }
     }
 
+    // Represents an action to remove a card from a deck
     private class RemoveCardAction extends AbstractAction {
 
         RemoveCardAction() {
@@ -174,13 +176,12 @@ public class DeckUI extends JInternalFrame implements ActionListener, MessageHan
         }
     }
 
-
+    // Represents an action to print out the cards within a deck
     private class PrintDeckAction extends AbstractAction {
 
         PrintDeckAction() {
             super("Print all cards");
         }
-
 
         // EFFECTS: prints out all the flashcards in the selected deck.
         @Override
@@ -193,7 +194,7 @@ public class DeckUI extends JInternalFrame implements ActionListener, MessageHan
         }
     }
 
-
+    // Represents an action to edit a selected flashcard
     private class EditCardAction extends AbstractAction {
 
         EditCardAction() {
@@ -241,7 +242,7 @@ public class DeckUI extends JInternalFrame implements ActionListener, MessageHan
         }
     }
 
-
+    // Represents an action to review the deck in a quiz format
     private class ReviewDeckAction extends AbstractAction {
 
         ReviewDeckAction() {

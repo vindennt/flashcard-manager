@@ -9,11 +9,11 @@ import javax.swing.JTextArea;
 
 import model.Deck;
 
+// Represents a printer to view existing deck information in a window
 public class DeckPrinter extends JInternalFrame {
     private static final int WIDTH = 400;
     private static final int HEIGHT = 300;
     private JTextArea textArea;
-
 
     public DeckPrinter(Component parent) {
         super("Deck list", false, true, false, false);

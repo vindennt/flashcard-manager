@@ -29,15 +29,15 @@ The user stories that I wish to fulfill are:
   menu to the right of "Selected Deck", selected the deck you just create. Then, a new window on the right will appear
   where you can add FlashCards to a Deck.
   - Note: To properly select a Deck or FlashCard, make sure to click on it from the dropdown menu
-- You can generate the second required event related to adding Xs to a Y by clicking the "Print decks from course"
-  button on the Home Menu. You can input the name of a course to filter by so that the program will print out
-  only the names of decks that are from the input course, which can help you narrow down your search
+- You can generate the second required event related to adding Xs to a Y by selecting a flashcard from a deck and then
+  clicking the "Edit Flashcard" on the deck menu. You can then replace the selected card with a newly delegated front
+  and back.
 - You can locate my visual component by looking for the deck icon to the left of the "Selected Deck" label on the
   Home Menu, and also by looking beside "Selected Card" after selecting a deck.
 - You can save the state of my application by clicking the "Save Deck" button on the Home Menu, or by pressing ctrl + s.
   The deck is then saved under a file named as a conjunction of the deck's name and course.
 - You can reload the state of my application by selecting the "Import Deck" button on the Home Menu, or by pressing
-  ctrl + I. Then, they can input the filename of the .json file, such as "DNABIOL200," which already exists in this project as one of the sample
-  files. 
+  ctrl + I. Then, they can input the filename of the .json file, such as "DNABIOL200," which already exists in this
+  project as one of the sample files. 
 
 

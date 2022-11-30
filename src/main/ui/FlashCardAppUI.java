@@ -20,8 +20,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-// Run the flashcard application with GUI
-public class FlashCardAppUI extends JFrame implements ActionListener {
+// Run the flashcard application with interactive GUI
+public class FlashCardAppUI extends JFrame implements ActionListener, MessageHandler {
     private static final int WIDTH = 1000;
     private static final int HEIGHT = 600;
     private JComboBox<String> deckSelectorCombo;         // contains display names to access decks
@@ -131,7 +131,7 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
                         25, Image.SCALE_DEFAULT));
         selectorLabel.setIcon(imageIcon);
 
-        selectionPanel.setLayout(new GridLayout(4, 2));
+        selectionPanel.setLayout(new GridLayout(3, 2));
 
         selectionPanel.add(selectorLabel);
         selectionPanel.add(deckSelectorCombo);
@@ -139,7 +139,6 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         selectionPanel.add(new JButton(new ImportDeckAction()));
         selectionPanel.add(new JButton(new PrintDeckAction()));
         selectionPanel.add(new JButton(new SaveDeckAction()));
-        selectionPanel.add(new JButton(new PrintFilteredDeckAction()));
 
         this.selectionPanel.add(selectionPanel, BorderLayout.WEST);
     }
@@ -205,14 +204,15 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
     }
 
 
-    // MODIFIES: this
-    // EFFECTS: action for when a user tries to add a new, empty deck
+    // Represents an action to create a new deck
     private class NewDeckAction extends AbstractAction {
 
         NewDeckAction() {
             super("Create Deck");
         }
 
+        // MODIFIES: this
+        // EFFECTS: creates a new deck with inputted name and course
         @Override
         public void actionPerformed(ActionEvent evt) {
             String name;
@@ -248,14 +248,15 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
         setLocation((width - getWidth()) / 2, (height - getHeight()) / 2);
     }
 
-    // MODIFIES: this
-    // EFFECTS: action for when a user wants to import/load an existing deck file
+    // Represents an action to load a deck from a json file
     private class ImportDeckAction extends AbstractAction {
 
         ImportDeckAction() {
             super("Import Deck");
         }
 
+        // MODIFIES: this
+        // EFFECTS: action for when a user wants to import/load an existing deck file
         @Override
         public void actionPerformed(ActionEvent evt) {
             String filename = JOptionPane.showInputDialog(null,
@@ -280,14 +281,15 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
     }
 
 
-    // MODIFIES: this
-    // EFFECTS: action for when a user wants to save a deck from the program
+    // Represents an action to save a deck to a json file
     private class SaveDeckAction extends AbstractAction {
 
         SaveDeckAction() {
             super("Save Deck");
         }
 
+        // MODIFIES: this
+        // EFFECTS: action for when a user wants to save a deck from the program
         @Override
         public void actionPerformed(ActionEvent evt) {
             String fileName = selectedDeck.getName() + selectedDeck.getCourse();
@@ -329,12 +331,13 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
     }
 
 
-    // EFFECTS: action for when user wants to print out all their decks
+    // Represents an action to print out all decks within the decklist
     private class PrintDeckAction extends AbstractAction {
         PrintDeckAction() {
             super("Print all decks");
         }
 
+        // EFFECTS: action for when user wants to print out all their decks
         @Override
         public void actionPerformed(ActionEvent evt) {
             DeckPrinter dp;
@@ -346,51 +349,25 @@ public class FlashCardAppUI extends JFrame implements ActionListener {
     }
 
 
-    // EFFECTS: action for when a user wants to print out decks from a specified course
-    private class PrintFilteredDeckAction extends AbstractAction {
-        PrintFilteredDeckAction() {
-            super("Print decks from course");
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent evt) {
-            String courseName = JOptionPane.showInputDialog(null,
-                    "Enter the course to filter by",
-                    JOptionPane.QUESTION_MESSAGE);
-            if (courseName != null) {
-                ArrayList<Deck> filteredDeckList = new ArrayList<>();
-                for (Deck d : deckList) {
-                    if (d.getCourse().equals(courseName)) {
-                        filteredDeckList.add(d);
-                    }
-                }
-                DeckPrinter dp;
-                dp = new DeckPrinter(FlashCardAppUI.this);
-                desktop.add((DeckPrinter) dp);
-                dp.printDeck(deckList);
-            }
-        }
-    }
-
-
-    // EFFECTS: requests focus when the window is clicked
+    // Represents an action that requests the OS to focus on the window when clicked
     private class DesktopFocusAction extends MouseAdapter {
         @Override
+        // EFFECTS: requests focus when the window is clicked
         public void mouseClicked(MouseEvent e) {
             FlashCardAppUI.this.requestFocusInWindow();
         }
 
     }
-
-
-    // EFFECTS: runs the application
-    // throws FIleNotFoundException when trying to load a file that does not exist
-    public static void main(String[] args) {
-        try {
-            new FlashCardAppUI();
-        } catch (FileNotFoundException e) {
-            System.out.println("Unable to run: file not found");
-        }
-    }
 }
+
+//    // EFFECTS: runs the application
+//    // throws FIleNotFoundException when trying to load a file that does not exist
+//    public static void main(String[] args) {
+//        try {
+//            new FlashCardAppUI();
+//        } catch (FileNotFoundException e) {
+//            System.out.println("Unable to run: file not found");
+//        }
+//    }
+//}
 

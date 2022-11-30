@@ -10,6 +10,7 @@ import javax.swing.JTextArea;
 
 import model.FlashCard;
 
+// Represents a printer to view existing flashcards in a deck
 public class FlashCardPrinter extends JInternalFrame {
     private static final int WIDTH = 400;
     private static final int HEIGHT = 300;
