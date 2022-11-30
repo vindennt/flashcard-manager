@@ -40,7 +40,7 @@ public class FlashCardAppUI extends JFrame implements ActionListener, MessageHan
     // MODIFIES: this
     // EFFECTS: handles flashcard application
     // throws FIleNotFoundException when a filename cannot be found in the data folder
-    public FlashCardAppUI() throws FileNotFoundException {
+    public FlashCardAppUI() {
         init();
         desktop = new JDesktopPane();
         desktop.addMouseListener(new DesktopFocusAction());
@@ -315,6 +315,7 @@ public class FlashCardAppUI extends JFrame implements ActionListener, MessageHan
         }
 
         // EFFECTS: saves selected deck to data directory
+        // throws FileNotFoundException if it cannot be created
         private void saveDeck(Deck deck) throws FileNotFoundException {
             jsonWriter.open();
             jsonWriter.write(deck);
@@ -360,14 +361,4 @@ public class FlashCardAppUI extends JFrame implements ActionListener, MessageHan
     }
 }
 
-//    // EFFECTS: runs the application
-//    // throws FIleNotFoundException when trying to load a file that does not exist
-//    public static void main(String[] args) {
-//        try {
-//            new FlashCardAppUI();
-//        } catch (FileNotFoundException e) {
-//            System.out.println("Unable to run: file not found");
-//        }
-//    }
-//}
 
