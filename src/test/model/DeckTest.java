@@ -42,12 +42,6 @@ public class DeckTest {
     }
 
     @Test
-    public void testGetBack() {
-        String testBack = testCard.getBack();
-        assertEquals(TEST_BACK, testBack);
-    }
-
-    @Test
     public void testToJson() {
         JSONObject expectedJson = new JSONObject();
         expectedJson.put("front", TEST_FRONT);
@@ -57,6 +51,13 @@ public class DeckTest {
     @Test
     public void testGetName() {
         assertEquals(TEST_NAME, testDeck.getName());
+    }
+
+    @Test
+    public void testGetDescription() {
+        String expected = "name: " + testDeck.getName() + ", course: "
+                + testDeck.getCourse();
+        assertEquals(expected, testDeck.getDescription());
     }
 
     @Test

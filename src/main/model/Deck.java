@@ -29,6 +29,7 @@ public class Deck implements Writable {
         this.name = name;
         this.course = course;
         this.cardsInDeck = new ArrayList<>();
+        EventLog.getInstance().logEvent(new Event("Created deck with " + getDescription()));
     }
 
     // EFFECTS: returns deck name
@@ -45,6 +46,8 @@ public class Deck implements Writable {
     // MODIFIES: this
     // EFFECTS: sets new deck name
     public void setName(String newName) {
+        EventLog.getInstance().logEvent(new Event(
+                "Set name of deck with " + getDescription() + " to " + newName));
         this.name = newName;
     }
 
@@ -52,6 +55,8 @@ public class Deck implements Writable {
     // MODIFIES: this
     // EFFECTS: sets new deck course
     public void setCourse(String newCourse) {
+        EventLog.getInstance().logEvent(new Event(
+                "Set course of deck with " + getDescription() + " to " + newCourse));
         this.course = newCourse;
     }
 
@@ -142,5 +147,10 @@ public class Deck implements Writable {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    public String getDescription() {
+        return "name: " + name + ", course: "
+                + course;
     }
 }
