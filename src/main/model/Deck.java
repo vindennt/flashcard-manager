@@ -87,12 +87,16 @@ public class Deck implements Writable {
             }
         }
         cardsInDeck.add(newCard);
+        EventLog.getInstance().logEvent(new Event(
+                "Added flashcard with " + newCard.getDescription() + " to deck " + getDescription()));
     }
 
     // MODIFIES: this
     // EFFECTS: removes flashcard from deck
     public void removeFlashCard(FlashCard cardToRemove) {
         cardsInDeck.remove(cardToRemove);
+        EventLog.getInstance().logEvent(new Event(
+                "Removed flashcard with " + cardToRemove.getDescription() + " from deck " + getDescription()));
     }
 
     // REQUIRES: index >= 0
@@ -102,6 +106,9 @@ public class Deck implements Writable {
         if ((index < 0) || (index >= cardsInDeck.size())) {
             System.out.println("Invalid index");
         } else {
+            EventLog.getInstance().logEvent(new Event(
+                    "Replaced flashcard with " + cardsInDeck.get(index).getDescription() + " from deck"
+                    + getDescription() + " with flashcard with " + newCard.getDescription()));
             cardsInDeck.set(index, newCard);
         }
     }
@@ -149,6 +156,7 @@ public class Deck implements Writable {
         return Objects.hash(name);
     }
 
+    // EFFECTS: returns decsription of deck's name and course
     public String getDescription() {
         return "name: " + name + ", course: "
                 + course;

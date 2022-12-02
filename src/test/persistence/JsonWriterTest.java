@@ -6,16 +6,22 @@
 package persistence;
 
 import exceptions.DuplicateFlashCardException;
+import model.Event;
+import model.EventLog;
 import model.FlashCard;
 import model.Deck;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class JsonWriterTest extends JsonTest {
+
+    EventLog el = EventLog.getInstance();
 
     @Test
     void testGetDestination() {
@@ -88,5 +94,31 @@ public class JsonWriterTest extends JsonTest {
         } catch (IOException | DuplicateFlashCardException e) {
             fail("Exception should not have been thrown");
         }
+    }
+
+    public List<Event> eventsToList() {
+        List<Event> eventList = new ArrayList<>();
+        for (Event nextEvent : el) {
+            eventList.add(nextEvent);
+        }
+        return eventList;
+    }
+
+    @Test
+    void testWriterGeneralDeckEventLogged() {
+        Deck d = null;
+        try {
+            d = new Deck("General deck", "CPSC 210");
+            el.clear();
+            JsonWriter writer = new JsonWriter("./data/testWriterGeneralDeck.json");
+            writer.open();
+            writer.write(d);
+            writer.close();
+        } catch (IOException e) {
+            fail("Unexpected IOException");
+        }
+        List<Event> eventList = eventsToList();
+        assertEquals("Saved deck with " + d.getDescription() + " to location ./data/testWriterGeneralDeck.json",
+                eventList.get(1).getDescription());
     }
 }

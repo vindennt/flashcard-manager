@@ -30,6 +30,13 @@ public class FlashCardTest {
     }
 
     @Test
+    public void testGetDescription() {
+        String expected = "front: " + testCard.getFront() + ", back: "
+                + testCard.getBack();
+        assertEquals(expected, testCard.getDescription());
+    }
+
+    @Test
     public void testToJson() {
         JSONObject expectedJson = new JSONObject();
         expectedJson.put("front", TEST_FRONT);

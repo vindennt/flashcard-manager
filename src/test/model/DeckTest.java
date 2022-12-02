@@ -8,8 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,6 +23,7 @@ public class DeckTest {
     String TEST_FRONT = "Front";
     String TEST_BACK = "Back";
     FlashCard differentCard;
+    EventLog el = EventLog.getInstance();
 
 
     @BeforeEach
@@ -39,6 +38,7 @@ public class DeckTest {
         } catch (DuplicateFlashCardException e) {
             fail("Unexpected DuplicateFlashCardException");
         }
+        el.clear();
     }
 
     @Test
@@ -276,6 +276,76 @@ public class DeckTest {
         assertEquals(expectedBack, TEST_BACK);
     }
 
+    // EFFECTS: puts events from event log into iterable list
+    public List<Event> eventsToList() {
+        List<Event> eventList = new ArrayList<>();
+        for (Event nextEvent : el) {
+            eventList.add(nextEvent);
+        }
+        return eventList;
+    }
+
+    @Test
+    public void testConstructorEventLogged() {
+        Deck newDeck = new Deck("event", "test");
+        List<Event> eventList = eventsToList();
+
+        assertEquals(eventList.get(1).getDescription(), "Created deck with name: event, course: test");
+    }
+
+    @Test
+    public void testSetNameEventLogged() {
+        testDeck.setName("newName");
+        List<Event> eventList = eventsToList();
+
+        assertEquals(eventList.get(1).getDescription(), "Set name of deck with name: test, course:" +
+                " CPSC210 to newName");
+    }
+
+    @Test
+    public void testSetCourseEventLogged() {
+        testDeck.setCourse("newCourse");
+        List<Event> eventList = eventsToList();
+
+        assertEquals(eventList.get(1).getDescription(), "Set course of deck with name: test, course:" +
+                " CPSC210 to newCourse");
+    }
+
+    @Test
+    public void testAddFlashCardEventLogged() {
+        FlashCard newCard = new FlashCard("event", "flash=card");
+
+        try {
+            testDeck.addFlashCard(newCard);
+        } catch (DuplicateFlashCardException e) {
+            fail("unexpected DuplicateFlashCardException");
+        }
+        List<Event> eventList = eventsToList();
+
+        assertEquals(eventList.get(1).getDescription(),
+                "Added flashcard with " + newCard.getDescription() + " to deck " + testDeck.getDescription());
+    }
+
+    @Test
+    public void testRemoveFlashCardEventLogged() {
+        testDeck.removeFlashCard(testCard);
+        List<Event> eventList = eventsToList();
+
+        assertEquals(eventList.get(1).getDescription(),
+                "Removed flashcard with " + testCard.getDescription()
+                        + " from deck " + testDeck.getDescription());
+    }
+
+    @Test
+    public void testSetFlashCardEventLogged() {
+        FlashCard newCard = new FlashCard("event", "flash=card");
+        testDeck.setFlashCard(0, newCard);
+        List<Event> eventList = eventsToList();
+
+        assertEquals(eventList.get(1).getDescription(),
+                "Replaced flashcard with " + testCard.getDescription() + " from deck"
+                        + testDeck.getDescription() + " with flashcard with " + newCard.getDescription());
+    }
 
 
 }

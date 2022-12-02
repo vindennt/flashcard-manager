@@ -15,6 +15,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
+import model.Event;
+import model.EventLog;
 import model.FlashCard;
 import org.json.*;
 
@@ -53,6 +55,8 @@ public class JsonReader {
         try (Stream<String> stream = Files.lines(Paths.get(source), StandardCharsets.UTF_8)) {
             stream.forEach(s -> contentBuilder.append(s));
         }
+        EventLog.getInstance().logEvent(new Event(
+                "Loaded deck from location " + source));
         return contentBuilder.toString();
     }
 
@@ -67,6 +71,7 @@ public class JsonReader {
             System.out.println(e.getMessage());
         }
         return d;
+
     }
 
     // MODIFIES: d

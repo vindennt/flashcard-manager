@@ -5,16 +5,22 @@
 
 package persistence;
 
+import model.Event;
+import model.EventLog;
 import model.FlashCard;
 import model.Deck;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class JsonReaderTest extends JsonTest {
+
+    EventLog el = EventLog.getInstance();
 
     @Test
     void testGetSource() {
@@ -71,4 +77,28 @@ public class JsonReaderTest extends JsonTest {
             fail("Couldn't read from file");
         }
     }
+
+    // EFFECTS: puts events from event log into iterable list
+    public List<Event> eventsToList() {
+        List<Event> eventList = new ArrayList<>();
+        for (Event nextEvent : el) {
+            eventList.add(nextEvent);
+        }
+        return eventList;
+    }
+
+    @Test
+    void testReaderGeneralDeckEventLogged() {
+        el.clear();
+        JsonReader reader = new JsonReader("./data/testReaderGeneralDeck.json");
+        try {
+            Deck d = reader.read();
+        } catch (IOException e) {
+            fail("Unexpected IOException");
+        }
+        List<Event> eventList = eventsToList();
+        assertEquals("Loaded deck from location ./data/testReaderGeneralDeck.json",
+                eventList.get(1).getDescription());
+    }
+
 }

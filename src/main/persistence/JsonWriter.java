@@ -6,6 +6,8 @@
 package persistence;
 
 import model.Deck;
+import model.Event;
+import model.EventLog;
 import org.json.JSONObject;
 
 
@@ -45,6 +47,9 @@ public class JsonWriter {
     public void write(Deck d) {
         JSONObject json = d.toJson();
         saveToFile(json.toString(TAB));
+        EventLog.getInstance().logEvent(new Event(
+                "Saved deck with " + d.getDescription() + " to location "
+                + this.destination));
     }
 
     // MODIFIES: this

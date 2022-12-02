@@ -1,14 +1,5 @@
 {
-    "cardsInDeck": [
-        {
-            "back": "3",
-            "front": "1 + 2?"
-        },
-        {
-            "back": "Mushrooms",
-            "front": "Worst food in the world?"
-        }
-    ],
+    "cardsInDeck": [],
     "name": "General deck",
     "course": "CPSC 210"
 }

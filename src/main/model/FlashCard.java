@@ -30,6 +30,7 @@ public class FlashCard implements Writable {
     public String getBack() {
         return this.back;
     }
+    
 
     // EFFECTS: returns the flashcard's front and back as a json object
     @Override
@@ -40,5 +41,8 @@ public class FlashCard implements Writable {
         return json;
     }
 
-
+    // EFFECTS: returns this card's front and back description
+    public String getDescription() {
+        return "front: " + front + ", back: " + back;
+    }
 }

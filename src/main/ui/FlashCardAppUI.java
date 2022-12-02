@@ -349,7 +349,6 @@ public class FlashCardAppUI extends JFrame implements ActionListener, MessageHan
         }
     }
 
-
     // Represents an action that requests the OS to focus on the window when clicked
     private class DesktopFocusAction extends MouseAdapter {
         @Override
