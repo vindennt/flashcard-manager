@@ -22,7 +22,7 @@ The user stories that I wish to fulfill are:
 - As a user, I want to be able to save a deck to a file
 - As a user, I want to be able to load a deck from a file
  
-# Instructions for Grader
+### P3: Instructions for Grader
 
 - You can generate the first required event related to adding Xs to a Y by clicking the "Create Deck" button on the
   Home menu. Enter a deck name and course when prompted. Then, from the dropdown
@@ -39,5 +39,46 @@ The user stories that I wish to fulfill are:
 - You can reload the state of my application by selecting the "Import Deck" button on the Home Menu, or by pressing
   ctrl + I. Then, they can input the filename of the .json file, such as "DNABIOL200," which already exists in this
   project as one of the sample files. 
+
+
+### Phase 4: Task 2
+
+########################  
+Log start
+---
+Fri Dec 02 13:49:54 PST 2022  
+Created deck with name: Suzette, course: CPSC210
+---
+Fri Dec 02 13:49:58 PST 2022  
+Loaded deck from location ./data/DNABIOL200.json
+---
+Fri Dec 02 13:49:58 PST 2022  
+Created deck with name: DNA, course: BIOL200
+---
+Fri Dec 02 13:49:58 PST 2022  
+Added flashcard with front: Pairs with A?, back: T to deck name: DNA, course: BIOL200
+---
+Fri Dec 02 13:49:58 PST 2022  
+Added flashcard with front: Pairs with C?, back: G to deck name: DNA, course: BIOL200
+---
+Fri Dec 02 13:49:59 PST 2022  
+Saved deck with name: Suzette, course: CPSC210 to location ./data/SuzetteCPSC210.json
+---
+Fri Dec 02 13:50:14 PST 2022  
+Added flashcard with front: thanks, back: for the help to deck name: Suzette, course: CPSC210
+---
+Fri Dec 02 13:50:22 PST 2022  
+Added flashcard with front: best, back: TA to deck name: Suzette, course: CPSC210
+---
+Fri Dec 02 13:50:22 PST 2022  
+Removed flashcard with front: thanks, back: for the help from deck name: Suzette, course: CPSC210
+---
+Fri Dec 02 13:50:22 PST 2022  
+Removed flashcard with front: thanks, back: for the help from deck name: Suzette, course: CPSC210
+---
+Fri Dec 02 13:50:28 PST 2022  
+Removed flashcard with front: best, back: TA from deck name: Suzette, course: CPSC210
+---
+Application exited
 
 
