@@ -49,7 +49,7 @@ public class JsonWriter {
         saveToFile(json.toString(TAB));
         EventLog.getInstance().logEvent(new Event(
                 "Saved deck with " + d.getDescription() + " to location "
-                + this.destination));
+                        + this.destination));
     }
 
     // MODIFIES: this

@@ -108,7 +108,7 @@ public class Deck implements Writable {
         } else {
             EventLog.getInstance().logEvent(new Event(
                     "Replaced flashcard with " + cardsInDeck.get(index).getDescription() + " from deck"
-                    + getDescription() + " with flashcard with " + newCard.getDescription()));
+                            + getDescription() + " with flashcard with " + newCard.getDescription()));
             cardsInDeck.set(index, newCard);
         }
     }
@@ -156,7 +156,7 @@ public class Deck implements Writable {
         return Objects.hash(name);
     }
 
-    // EFFECTS: returns decsription of deck's name and course
+    // EFFECTS: returns description of deck's name and course
     public String getDescription() {
         return "name: " + name + ", course: "
                 + course;

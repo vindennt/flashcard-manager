@@ -1,10 +1,13 @@
+// References: AlarmSystem
+// Git: https://github.students.cs.ubc.ca/CPSC210/AlarmSystem.git
+// Author: Paul Carter
+// Contribution: Adapted to work for FlashCardApp methods
+
 package ui;
 
 import exceptions.DuplicateFlashCardException;
 import model.Deck;
 import model.FlashCard;
-import persistence.JsonReader;
-import persistence.JsonWriter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +16,7 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.List;
 
-// Deck UI for interacting with the flashcards in a deck
+// Represents a Deck UI for interacting with the flashcards in a deck
 public class DeckUI extends JInternalFrame implements ActionListener, MessageHandler {
     private static final int WIDTH = 500;
     private static final int HEIGHT = 300;
@@ -24,10 +27,6 @@ public class DeckUI extends JInternalFrame implements ActionListener, MessageHan
     private JComboBox<String> cardSelectorCombo;
     private HashMap<String, FlashCard> cardSelectorReference;
     private FlashCard selectedFlashCard;
-
-    private JsonWriter jsonWriter;    // deck saver
-    private JsonReader jsonReader;    // deck loader
-    private String jsonFileLocation;  // tracks target file location
 
     public DeckUI(Deck d, Component parent) {
         super("Deck: " + d.getName(), true, true, false, false);
@@ -57,7 +56,7 @@ public class DeckUI extends JInternalFrame implements ActionListener, MessageHan
         setVisible(true);
     }
 
-    // EFFECTS: creates the dropdown menu for all flashcards
+    // EFFECTS: creates the dropdown menu for selecting a flashcard
     private JComboBox<String> createCardSelectionCombo() {
         cardSelectorCombo = new JComboBox<String>();
         cardSelectorCombo.setEditable(true);
@@ -243,6 +242,7 @@ public class DeckUI extends JInternalFrame implements ActionListener, MessageHan
     }
 
     // Represents an action to review the deck in a quiz format
+    // TODO: implement this if time permits
     private class ReviewDeckAction extends AbstractAction {
 
         ReviewDeckAction() {

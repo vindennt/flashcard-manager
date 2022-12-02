@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-// Flashcard storage and review application
+// Represents a Flashcard studying application
 public class FlashCardApp {
     private Scanner input;            // monitors input
     private ArrayList<Deck> deckList; // list of all decks

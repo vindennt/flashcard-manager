@@ -1,3 +1,8 @@
+// References: AlarmSystem
+// Git: https://github.students.cs.ubc.ca/CPSC210/AlarmSystem.git
+// Author: Paul Carter
+// Contribution: Adapted to work for FlashCardApp methods
+
 package ui;
 
 import java.awt.Component;
@@ -10,7 +15,7 @@ import javax.swing.JTextArea;
 
 import model.FlashCard;
 
-// Represents a printer to view existing flashcards in a deck
+// Represents a printer to view flashcards in a deck
 public class FlashCardPrinter extends JInternalFrame {
     private static final int WIDTH = 400;
     private static final int HEIGHT = 300;

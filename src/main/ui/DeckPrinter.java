@@ -1,3 +1,8 @@
+// References: AlarmSystem
+// Git: https://github.students.cs.ubc.ca/CPSC210/AlarmSystem.git
+// Author: Paul Carter
+// Contribution: Adapted to work for FlashCardApp methods
+
 package ui;
 
 import java.awt.Component;

@@ -7,6 +7,8 @@ package persistence;
 
 import org.json.JSONObject;
 
+
+// Represents the behaviour of a class that can be saved to a json
 public interface Writable {
     // EFFECTS: returns this as JSON object
     JSONObject toJson();

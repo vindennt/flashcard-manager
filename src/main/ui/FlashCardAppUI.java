@@ -23,13 +23,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-// Run the flashcard application with interactive GUI
+// Represents a Flashcard studying application and GUI
 public class FlashCardAppUI extends JFrame implements ActionListener, MessageHandler {
     private static final int WIDTH = 1000;
     private static final int HEIGHT = 600;
     private JComboBox<String> deckSelectorCombo;         // contains display names to access decks
     private HashMap<String, Deck> deckSelectorReference; // name reference to access actual decks
-
     private JDesktopPane desktop;
     private JInternalFrame selectionPanel;
 
@@ -87,7 +86,7 @@ public class FlashCardAppUI extends JFrame implements ActionListener, MessageHan
     }
 
     // MODIFIES: this
-    // EFFECTS: warns user when they want to exist the program
+    // EFFECTS: warns user when they want to exist the program, and prints a log of events to console
     public void closeHandler() {
         int confirmed = JOptionPane.showConfirmDialog(null,
                 "Any unsaved work will be lost. Are you sure you want to exit?", "Warning",
@@ -98,6 +97,7 @@ public class FlashCardAppUI extends JFrame implements ActionListener, MessageHan
         }
     }
 
+    // EFFECTS: prints a log of timestamped events to the console
     private void printLog() {
         System.out.println("########################");
         System.out.println("Log start");

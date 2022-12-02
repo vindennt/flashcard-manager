@@ -30,7 +30,7 @@ public class FlashCard implements Writable {
     public String getBack() {
         return this.back;
     }
-    
+
 
     // EFFECTS: returns the flashcard's front and back as a json object
     @Override
