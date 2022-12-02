@@ -7,6 +7,8 @@ package ui;
 
 import model.Deck;
 import exceptions.DuplicateDeckException;
+import model.Event;
+import model.EventLog;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
@@ -19,6 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 // Run the flashcard application with interactive GUI
 public class FlashCardAppUI extends JFrame implements ActionListener, MessageHandler {
@@ -36,6 +39,8 @@ public class FlashCardAppUI extends JFrame implements ActionListener, MessageHan
     private JsonReader jsonReader;    // deck loader
     private String jsonFileLocation;  // tracks target file location
     private Deck selectedDeck;
+
+    EventLog el = EventLog.getInstance();
 
     // MODIFIES: this
     // EFFECTS: handles flashcard application
@@ -88,8 +93,23 @@ public class FlashCardAppUI extends JFrame implements ActionListener, MessageHan
                 "Any unsaved work will be lost. Are you sure you want to exit?", "Warning",
                 JOptionPane.YES_NO_OPTION);
         if (confirmed == JOptionPane.YES_OPTION) {
+            printLog();
             dispose();
         }
+    }
+
+    private void printLog() {
+        System.out.println("########################");
+        System.out.println("Log start");
+        System.out.println("---");
+
+        Iterator<Event> eventIterator = el.iterator();
+        while (eventIterator.hasNext()) {
+            Event nextEvent = eventIterator.next();
+            System.out.println(nextEvent.toString());
+            System.out.println("---");
+        }
+        System.out.println("Application exited");
     }
 
 
